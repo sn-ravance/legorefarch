@@ -57,51 +57,45 @@ function App() {
     { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance' },
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
   ]);
- 
-  const diagramRef = useRef(null);
-  const [status, setStatus] = useState('Ready');
 
-  const handleMoveBlock = (blockId, targetSwimlane) => {
-    setBlocks(prevBlocks =>
-      prevBlocks.map(block =>
-        block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
-      )
+    const diagramRef = useRef(null);
+  
+    const handleMoveBlock = (blockId, targetSwimlane) => {
+      setBlocks((prevBlocks) =>
+        prevBlocks.map((block) =>
+          block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
+        )
+      );
+    };
+  
+    const handleGenerateImage = () => {
+      const svgString = new XMLSerializer().serializeToString(diagramRef.current);
+  
+      const blob = new Blob([svgString], { type: 'image/svg+xml' });
+      const svgUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = 'diagram.svg';
+      link.href = svgUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(svgUrl);
+    };
+  
+    return (
+      <div className="App">
+        <h1>RefArch Diagram Generator</h1>
+        <DndProvider backend={HTML5Backend}>
+          <div className="grid-container">
+            <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
+          </div>
+          <div className="download-settings">
+            <button onClick={handleGenerateImage}>Generate SVG</button>
+          </div>
+        </DndProvider>
+      </div>
     );
-  };
-
-  const handleGenerateImage = () => {
-    setStatus('Generating SVG...');
+  }
   
-    const svgString = new XMLSerializer().serializeToString(diagramRef.current);
+  export default App;
   
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-    const svgUrl = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = 'diagram.svg';
-    link.href = svgUrl;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(svgUrl);
-  
-    setStatus('Ready');
-  };
-  
-
-  return (
-    <div className="App">
-      <h1>RefArch Diagram Generator</h1>
-      <DndProvider backend={HTML5Backend}>
-        <div ref={diagramRef}>
-          <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
-        </div>
-        <div className="download-settings">
-          <button onClick={handleGenerateImage}>Generate SVG</button>
-        </div>
-        <div className="status">{status}</div>
-      </DndProvider>
-    </div>
-  );
-}
-
-export default App;

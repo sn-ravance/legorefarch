@@ -1,29 +1,54 @@
 #!/bin/bash
 
-# Array of files to process
-files_to_process=(
-  "/Users/robvance/Documents/GitHub/legorefarch/src/App.js"
-  "/Users/robvance/Documents/GitHub/legorefarch/src/App.css"
-  "/Users/robvance/Documents/GitHub/legorefarch/src/components/Swimlane.js"
-  "/Users/robvance/Documents/GitHub/legorefarch/src/components/Block.js"
-  "/Users/robvance/Documents/GitHub/legorefarch/src/components/Lane.js"
-  # Add more file paths here as needed
-)
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <base_filename>"
+    exit 1
+fi
 
-# Function to add a file's filename to legorefarch.txt and append its content
-function add_file_to_code {
-    echo "Adding $1's filename to legorefarchv1.txt"
-    echo "$1" >> legorefarchv1.txt
-    pbcopy < "$1" && pbpaste >> legorefarchv1.txt
-    echo "Adding a blank row to legorefarchv1.txt"
-    echo "" >> legorefarchv1.txt
+base_filename="$1"
+output_filename="${base_filename}.txt"
+version=1
+
+# Function to generate the next versioned filename
+function generate_versioned_filename {
+    if [ "$version" -eq 1 ]; then
+        echo "${output_filename}"
+    else
+        echo "${output_filename%.*}v${version}.${output_filename##*.}"
+    fi
 }
 
-# Loop through the files in the array and call the function for each file
-for file in "${files_to_process[@]}"; do
-    if [ -f "$file" ]; then
-        add_file_to_code "$file"
+# Function to increment the version
+function increment_version {
+    versioned_output_filename=$(generate_versioned_filename)
+    
+    while [ -f "$versioned_output_filename" ]; do
+        ((version++))
+        versioned_output_filename=$(generate_versioned_filename)
+    done
+}
+
+# Read file paths from file_list.txt
+files_to_process=$(cat file_list.txt)
+
+# Create or append to the versioned output file
+function create_or_append_output_file {
+    if [ ! -f "${versioned_output_filename}" ]; then
+        touch "${versioned_output_filename}"
     fi
-done
-echo "Copied code into the clipboard"
-pbcopy < legorefarchv1.txt
+    
+    for file in $files_to_process; do
+        if [ -f "$file" ]; then
+            echo "Adding $file's content to ${versioned_output_filename}"
+            cat "$file" >> "${versioned_output_filename}"
+            echo "" >> "${versioned_output_filename}"
+        fi
+    done
+}
+
+increment_version
+create_or_append_output_file
+
+echo "The ${output_filename} has been versioned as ${versioned_output_filename}"
+echo "The entire content of ${versioned_output_filename} is copied into the clipboard"
+cat "${versioned_output_filename}" | pbcopy

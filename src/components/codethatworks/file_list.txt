@@ -1,0 +1,6 @@
+/Users/robvance/Documents/GitHub/legorefarch/src/App.js
+/Users/robvance/Documents/GitHub/legorefarch/src/App.css
+/Users/robvance/Documents/GitHub/legorefarch/src/components/Swimlane.js
+/Users/robvance/Documents/GitHub/legorefarch/src/components/Block.js
+/Users/robvance/Documents/GitHub/legorefarch/src/components/Lane.js
+# Add more file paths here as needed

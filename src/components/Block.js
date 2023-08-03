@@ -30,7 +30,7 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'BLOCK',
     item: { id, swimlane },
-    collect: monitor => ({
+    collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
@@ -38,12 +38,12 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
   const [blockColor, setBlockColor] = useState(color);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
-  const handleColorChange = newColor => {
+  const handleColorChange = (newColor) => {
     setBlockColor(newColor);
     setContextMenuPosition(null);
   };
 
-  const handleContextMenu = e => {
+  const handleContextMenu = (e) => {
     e.preventDefault();
     setContextMenuPosition({ top: e.clientY, left: e.clientX });
   };
@@ -67,6 +67,7 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
       )}
     </div>
   );
+  
 };
 
 export default Block;

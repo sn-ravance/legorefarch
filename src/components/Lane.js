@@ -14,9 +14,8 @@ const Lane = ({ title, onDropBlock, children }) => {
 
   return (
     <div ref={drop} className={`lane ${isOver ? 'highlighted' : ''}`}>
-      <h3>{title}</h3>
       <div className="blocks">
-        {children} {/* Only render children blocks within the lane */}
+        {children}
       </div>
     </div>
   );
