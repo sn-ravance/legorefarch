@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Swimlane from './components/Swimlane';
+import Block from './components/Block';
 
 function App() {
   const [blocks, setBlocks] = useState([
@@ -57,9 +58,6 @@ function App() {
     { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance' },
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
   ]);
- 
-  const diagramRef = useRef(null);
-  const [status, setStatus] = useState('Ready');
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
     setBlocks(prevBlocks =>
@@ -69,36 +67,23 @@ function App() {
     );
   };
 
-  const handleGenerateImage = () => {
-    setStatus('Generating SVG...');
-  
-    const svgString = new XMLSerializer().serializeToString(diagramRef.current);
-  
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-    const svgUrl = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = 'diagram.svg';
-    link.href = svgUrl;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(svgUrl);
-  
-    setStatus('Ready');
-  };
-  
-
   return (
     <div className="App">
-      <h1>RefArch Diagram Generator</h1>
+      <h1>Swimlane Diagram</h1>
       <DndProvider backend={HTML5Backend}>
-        <div ref={diagramRef}>
-          <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
+        <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
+        <div className="block-container">
+          {blocks.map(block => (
+            <Block
+              key={block.id}
+              id={block.id}
+              color={block.color}
+              text={block.text}
+              swimlane={block.swimlane}
+              onMoveBlock={handleMoveBlock}
+            />
+          ))}
         </div>
-        <div className="download-settings">
-          <button onClick={handleGenerateImage}>Generate SVG</button>
-        </div>
-        <div className="status">{status}</div>
       </DndProvider>
     </div>
   );

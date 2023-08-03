@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+/Users/robvance/Documents/GitHub/legorefarch/src/App.js
+import React, { useState } from 'react';
 import './App.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Swimlane from './components/Swimlane';
+import Block from './components/Block';
 
 function App() {
   const [blocks, setBlocks] = useState([
@@ -57,9 +59,6 @@ function App() {
     { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance' },
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
   ]);
- 
-  const diagramRef = useRef(null);
-  const [status, setStatus] = useState('Ready');
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
     setBlocks(prevBlocks =>
@@ -69,39 +68,199 @@ function App() {
     );
   };
 
-  const handleGenerateImage = () => {
-    setStatus('Generating SVG...');
-  
-    const svgString = new XMLSerializer().serializeToString(diagramRef.current);
-  
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-    const svgUrl = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = 'diagram.svg';
-    link.href = svgUrl;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(svgUrl);
-  
-    setStatus('Ready');
-  };
-  
-
   return (
     <div className="App">
-      <h1>RefArch Diagram Generator</h1>
+      <h1>Swimlane Diagram</h1>
       <DndProvider backend={HTML5Backend}>
-        <div ref={diagramRef}>
-          <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
+        <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
+        <div className="block-container">
+          {blocks.map(block => (
+            <Block
+              key={block.id}
+              id={block.id}
+              color={block.color}
+              text={block.text}
+              swimlane={block.swimlane}
+              onMoveBlock={handleMoveBlock}
+            />
+          ))}
         </div>
-        <div className="download-settings">
-          <button onClick={handleGenerateImage}>Generate SVG</button>
-        </div>
-        <div className="status">{status}</div>
       </DndProvider>
     </div>
   );
 }
 
 export default App;
+
+/Users/robvance/Documents/GitHub/legorefarch/src/App.css
+.App {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.swimlane {
+  display: flex;
+  flex-direction: column; /* Change to column */
+  align-items: center;
+  margin: 20px;
+}
+
+.lane {
+  border: 2px solid #ccc;
+  padding: 10px;
+  width: 300px; /* Adjust width as needed */
+  margin-bottom: 10px; /* Add margin between lanes */
+}
+
+.lane.highlighted {
+  border-color: #f39c12;
+}
+
+.block-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.block {
+  width: 50px;
+  height: 50px;
+  margin: 0 10px;
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.block.dragging {
+  opacity: 0.5;
+}
+
+.lane {
+  border: 2px solid #ccc;
+  padding: 10px;
+  width: 300px;
+  margin-bottom: 10px;
+  display: flex; /* Display as flex to position blocks horizontally */
+}
+
+.blocks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align blocks to the right */
+  width: 200px; /* Adjust width as needed */
+}
+
+.block {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 5px; /* Add margin between blocks */
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/Users/robvance/Documents/GitHub/legorefarch/src/components/Swimlane.js
+import React from 'react';
+import Lane from './Lane';
+import Block from './Block';
+
+const actors = [
+  'Access Control',
+  'Data Protection',
+  'Secure SDLC & Security Processes',
+  'Design',
+  'Operations Support & Maintenance',
+];
+
+const Swimlane = ({ blocks, onMoveBlock }) => {
+  const handleDropBlock = (blockId, targetSwimlane) => {
+    const block = blocks.find(block => block.id === blockId);
+    if (block && block.swimlane !== targetSwimlane) {
+      onMoveBlock(blockId, targetSwimlane);
+    }
+  };
+
+  return (
+    <div className="swimlane">
+      {actors.map(actor => (
+        <Lane key={actor} title={actor} onDropBlock={handleDropBlock}>
+          {blocks
+            .filter(block => block.swimlane === actor)
+            .map(block => (
+              <Block
+                key={block.id}
+                id={block.id}
+                color={block.color}
+                text={block.text}
+                swimlane={block.swimlane}
+                onMoveBlock={onMoveBlock}
+              />
+            ))}
+        </Lane>
+      ))}
+    </div>
+  );
+};
+
+export default Swimlane;
+
+/Users/robvance/Documents/GitHub/legorefarch/src/components/Block.js
+import React from 'react';
+import { useDrag } from 'react-dnd';
+
+const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
+  const [{ isDragging }, drag] = useDrag({
+    type: 'BLOCK',
+    item: { id, swimlane },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  return (
+    <div
+      ref={drag}
+      className={`block ${isDragging ? 'dragging' : ''}`}
+      style={{ backgroundColor: color }}
+    >
+      {text}
+      {onMoveBlock && <span className="move-icon">🔃</span>}
+    </div>
+  );
+};
+
+export default Block;
+
+/Users/robvance/Documents/GitHub/legorefarch/src/components/Lane.js
+import React from 'react';
+import { useDrop } from 'react-dnd';
+
+const Lane = ({ title, onDropBlock, children }) => {
+  const isAccessControl = title === 'Access Control';
+
+  const [{ isOver }, drop] = useDrop({
+    accept: 'BLOCK',
+    drop: item => {
+      onDropBlock(item.id, title);
+    },
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+    }),
+  });
+
+  return (
+    <div ref={drop} className={`lane ${isOver ? 'highlighted' : ''}`}>
+      <h3>{title}</h3>
+      <div className="blocks">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+export default Lane;
+

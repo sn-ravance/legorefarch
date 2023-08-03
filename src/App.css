@@ -1,38 +1,69 @@
 .App {
   text-align: center;
+  margin-top: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.swimlane-container {
+  display: flex;
+  margin: 20px;
+  overflow-x: auto; /* Add horizontal scrollbar if needed */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.lanes {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 80%; /* Adjust lane width based on actor column */
+}
+
+.lane {
+  border: 2px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between; /* Space evenly between blocks */
+  align-items: center; /* Align blocks vertically centered */
+  flex-wrap: wrap; /* Allow blocks to wrap within the lane's width */
+  width: 100%; /* Set lane width to 100% of the lanes container */
+}
+
+.blocks {
+  display: flex;
+  flex-wrap: wrap; /* Allow blocks to wrap within the lane's width */
+}
+
+.block {
+  max-width: 250px;
+  width: auto;
+  height: 50px;
+  margin: 0 5px 5px 0;
+  padding: 5px;
+  border: 1px solid #333;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  cursor: pointer;
+  word-wrap: break-word;
 }
 
-.App-link {
-  color: #61dafb;
+.block.dragging {
+  opacity: 0.5;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.context-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
 }
+
+.color-option {
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* ... (any other existing styles) ... */
