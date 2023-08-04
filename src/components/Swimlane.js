@@ -2,7 +2,7 @@ import React from 'react';
 import Lane from './Lane';
 import Block from './Block';
 
-const Swimlane = ({ blocks, onMoveBlock }) => {
+const Swimlane = ({ blocks, onMoveBlock, onAddBlock }) => {
   const actors = [
     'Access Control',
     'Data Protection',
@@ -25,11 +25,15 @@ const Swimlane = ({ blocks, onMoveBlock }) => {
           <div className="row" key={actor}>
             <div className="actors-cell">
               <div className="actor">
-                {actor}
+                <h3>{actor}</h3>
               </div>
             </div>
             <div className="lanes-cell">
-              <Lane title={actor} onDropBlock={handleDropBlock}>
+              <Lane
+                  title={actor}
+                  onDropBlock={handleDropBlock}
+                  onAddBlock={onAddBlock} // Pass the onAddBlock function
+              >
                 {blocks
                   .filter(block => block.swimlane === actor)
                   .map(block => (

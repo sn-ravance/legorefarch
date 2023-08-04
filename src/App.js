@@ -3,6 +3,7 @@ import './App.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Swimlane from './components/Swimlane';
+import { saveAs } from 'file-saver';
 
 function App() {
   const [blocks, setBlocks] = useState([
@@ -58,44 +59,72 @@ function App() {
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
   ]);
 
-    const diagramRef = useRef(null);
-  
-    const handleMoveBlock = (blockId, targetSwimlane) => {
-      setBlocks((prevBlocks) =>
-        prevBlocks.map((block) =>
-          block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
-        )
-      );
-    };
-  
-    const handleGenerateImage = () => {
-      const svgString = new XMLSerializer().serializeToString(diagramRef.current);
-  
-      const blob = new Blob([svgString], { type: 'image/svg+xml' });
-      const svgUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = 'diagram.svg';
-      link.href = svgUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(svgUrl);
-    };
-  
-    return (
-      <div className="App">
-        <h1>RefArch Diagram Generator</h1>
-        <DndProvider backend={HTML5Backend}>
-          <div className="grid-container">
-            <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
-          </div>
-          <div className="download-settings">
-            <button onClick={handleGenerateImage}>Generate SVG</button>
-          </div>
-        </DndProvider>
-      </div>
+  const diagramRef = useRef(null);
+  const [svgFilename, setSvgFilename] = useState('diagram.svg'); // Default filename
+
+  const handleAddBlock = (swimlane) => {
+    const text = prompt('Enter text for the new block:');
+    if (text) {
+      const newBlock = {
+        id: Date.now(), // Generate a unique ID
+        color: 'lightgrey', // Default color
+        text,
+        swimlane,
+      };
+
+      setBlocks(prevBlocks => [...prevBlocks, newBlock]);
+    }
+  };
+
+  const handleMoveBlock = (blockId, targetSwimlane) => {
+    setBlocks((prevBlocks) =>
+      prevBlocks.map((block) =>
+        block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
+      )
     );
-  }
-  
-  export default App;
-  
+  };
+
+  const handleGenerateImage = () => {
+    console.log('Generating SVG...');
+
+    const svgNode = diagramRef.current;
+
+    if (!svgNode) {
+      return;
+    }
+
+    const svgString = new XMLSerializer().serializeToString(svgNode);
+
+    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+
+    saveAs(blob, svgFilename); // Use the saveAs function
+
+    console.log('Generating SVG Complete.');
+  }; 
+
+  return (
+    <div className="App">
+      <h1>RefArch Diagram Generator</h1>
+      <DndProvider backend={HTML5Backend}>
+        <div className="grid-container">
+        <Swimlane
+          blocks={blocks}
+          onMoveBlock={handleMoveBlock}
+          onAddBlock={handleAddBlock} // Pass the handler to the Swimlane component
+        />
+        </div>
+        <div className="download-settings">
+          <input
+            type="text"
+            placeholder="Enter SVG filename"
+            value={svgFilename}
+            onChange={(e) => setSvgFilename(e.target.value)}
+          />
+          <button onClick={handleGenerateImage}>Generate SVG</button>
+        </div>
+      </DndProvider>
+    </div>
+  );
+}
+
+export default App;
