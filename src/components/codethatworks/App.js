@@ -67,10 +67,30 @@ function App() {
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
   ];
 
-  const handleReset = () => {
-    setBlocks([...initialBlocks]);
-  };
+  const [blockColors, setBlockColors] = useState(() => {
+    // Initialize block colors using initialBlocks
+    const initialBlockColors = initialBlocks.reduce((acc, block) => {
+      acc[block.id] = block.color;
+      return acc;
+    }, {});
+    return initialBlockColors;
+  });
 
+  const handleReset = () => {
+    const resetBlocks = initialBlocks.map((block) => ({
+      ...block,
+      color: blockColors[block.id] || block.color, // Use blockColors to reset the color
+    }));
+    setBlocks(resetBlocks);
+  
+    // Reset block colors for all blocks using initial colors
+    const resetBlockColors = initialBlocks.reduce((acc, block) => {
+      acc[block.id] = block.color;
+      return acc;
+    }, {});
+    setBlockColors(resetBlockColors); // Reset blockColors to match initial colors
+  };
+  
   const [blocks, setBlocks] = useState(initialBlocks);
 
   const handleMoveBlock = (blockId, targetSwimlane) => {

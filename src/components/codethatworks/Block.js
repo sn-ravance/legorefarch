@@ -27,6 +27,10 @@ const ContextMenu = ({ top, left, onClose, onColorChange }) => {
 };
 
 const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
+  const [blockColors, setBlockColors] = useState({}); // State to manage block colors
+
+  const blockColor = blockColors[id] || color;
+
   const [{ isDragging }, drag] = useDrag({
     type: 'BLOCK',
     item: { id, swimlane },
@@ -35,11 +39,13 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
     }),
   });
 
-  const [blockColor, setBlockColor] = useState(color);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
   const handleColorChange = (newColor) => {
-    setBlockColor(newColor);
+    setBlockColors((prevBlockColors) => ({
+      ...prevBlockColors,
+      [id]: newColor,
+    }));
     setContextMenuPosition(null);
   };
 
@@ -67,7 +73,6 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
       )}
     </div>
   );
-  
 };
 
 export default Block;

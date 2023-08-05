@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Lane from './Lane';
 import Block from './Block';
 
@@ -11,6 +11,14 @@ const Swimlane = ({ blocks, onMoveBlock }) => {
     'Operations Support & Maintenance',
   ];
 
+  // Initialize block colors using initialBlocks
+  const initialBlockColors = blocks.reduce((acc, block) => {
+    acc[block.id] = block.color;
+    return acc;
+  }, {});
+
+  const [blockColors, setBlockColors] = useState(initialBlockColors);
+
   const handleDropBlock = (blockId, targetSwimlane) => {
     const block = blocks.find(block => block.id === blockId);
     if (block && block.swimlane !== targetSwimlane) {
@@ -18,31 +26,43 @@ const Swimlane = ({ blocks, onMoveBlock }) => {
     }
   };
 
+  const handleResetColors = (swimlaneTitle) => {
+    const updatedBlocks = blocks.map(block => {
+      if (block.swimlane === swimlaneTitle) {
+        return { ...block, color: blockColors[block.id] || block.color };
+      }
+      return block;
+    });
+    
+    const updatedBlockColors = { ...blockColors };
+    for (const block of updatedBlocks) {
+      updatedBlockColors[block.id] = block.color;
+    }
+    setBlockColors(updatedBlockColors);
+  };
+
   return (
     <div className="swimlane-container">
       <div className="lanes-box">
         {actors.map(actor => (
-          <div className="row" key={actor}>
-            <div className="actors-cell">
-              <div className="actor">
-                <h3>{actor}</h3>
-              </div>
-            </div>
-            <div className="lanes-cell">
-              <Lane title={actor} onDropBlock={handleDropBlock}>
-                {blocks
-                  .filter(block => block.swimlane === actor)
-                  .map(block => (
-                    <Block
-                      key={block.id}
-                      id={block.id}
-                      color={block.color}
-                      text={block.text}
-                      onMoveBlock={onMoveBlock}
-                    />
-                  ))}
-              </Lane>
-            </div>
+          <div className="lanes-cell" key={actor}>
+            <Lane
+              title={actor}
+              onDropBlock={handleDropBlock}
+              onResetColors={handleResetColors}
+            >
+              {blocks
+                .filter(block => block.swimlane === actor)
+                .map(block => (
+                  <Block
+                    key={block.id}
+                    id={block.id}
+                    color={block.color}
+                    text={block.text}
+                    onMoveBlock={onMoveBlock}
+                  />
+                ))}
+            </Lane>
           </div>
         ))}
       </div>

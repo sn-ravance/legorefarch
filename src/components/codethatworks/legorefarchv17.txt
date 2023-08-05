@@ -175,3 +175,391 @@ function App() {
 }
 
 export default App;
+/* Reset some default browser styles */
+body, h1, h2, h3, p, ul, li {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: flex;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  flex-grow: 1;
+  transition: margin-left 0.3s;
+  margin-left: 0;
+}
+
+.content-expanded {
+  margin-left: 200px;
+}
+
+/* Styling for the swimlane container */
+.swimlane-container {
+  display: flex;
+  margin: 20px;
+  overflow-x: auto; /* Add horizontal scrollbar if needed */
+}
+
+.lanes-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.actors-cell {
+  border: 1px solid; /* Add a border around each actor cell */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  grid-column: span 1;
+  grid-row: span 1;
+  gap: 8px;
+  justify-content: center; /* Center the content vertically */
+  align-items: center; /* Center the content horizontally */
+  text-align: center; /* Center the text within the cell */
+  width: 200px; /* Set max width for the right grid */
+  word-wrap: break-word; /* Wrap text within the grid */
+}
+
+.actors h3 {
+  margin: 0;
+}
+
+.lanes-cell {
+  display: grid;
+  grid-column: span 1;
+  grid-row: span 1;
+  gap: 8px;
+  grid-template-columns: 1fr;
+  border: 1px solid;
+  padding: 10px;
+  width: 1500px; /* Set max width for the right grid */
+  word-wrap: break-word; /* Wrap text within the grid */
+}
+
+/* Styling for the lanes */
+.lane {
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Expand to fill available space */
+}
+
+.blocks {
+  display: flex;
+  flex-wrap: wrap; /* Allow blocks to wrap within the lane's width */
+}
+
+.block {
+  max-width: 250px;
+  width: 250px;
+  height: 50px;
+  margin: 0 5px 5px 0;
+  padding: 5px;
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  word-wrap: break-word;
+}
+
+.block.dragging {
+  opacity: 0.5;
+}
+
+.context-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+}
+
+.color-option {
+  cursor: pointer;
+  padding: 5px;
+}
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Ensure full viewport height */
+  margin: 0 auto; /* Center horizontally */
+}
+
+/* Center the title */
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+/* Center the grid container */
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+import React from 'react';
+import Lane from './Lane';
+import Block from './Block';
+
+const Swimlane = ({ blocks, onMoveBlock }) => {
+  const actors = [
+    'Access Control',
+    'Data Protection',
+    'Secure SDLC & Security Processes',
+    'Design',
+    'Operations Support & Maintenance',
+  ];
+
+  const handleDropBlock = (blockId, targetSwimlane) => {
+    const block = blocks.find(block => block.id === blockId);
+    if (block && block.swimlane !== targetSwimlane) {
+      onMoveBlock(blockId, targetSwimlane);
+    }
+  };
+
+  return (
+    <div className="swimlane-container">
+      <div className="lanes-box">
+        {actors.map(actor => (
+          <div className="row" key={actor}>
+            <div className="actors-cell">
+              <div className="actor">
+                <h3>{actor}</h3>
+              </div>
+            </div>
+            <div className="lanes-cell">
+              <Lane title={actor} onDropBlock={handleDropBlock}>
+                {blocks
+                  .filter(block => block.swimlane === actor)
+                  .map(block => (
+                    <Block
+                      key={block.id}
+                      id={block.id}
+                      color={block.color}
+                      text={block.text}
+                      onMoveBlock={onMoveBlock}
+                    />
+                  ))}
+              </Lane>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Swimlane;
+import React, { useState } from 'react';
+import { useDrag } from 'react-dnd';
+
+const ContextMenu = ({ top, left, onClose, onColorChange }) => {
+  return (
+    <div
+      className="context-menu"
+      style={{ top: `${top}px`, left: `${left}px` }}
+    >
+      <div className="color-option" onClick={() => onColorChange('lightgrey')}>
+        Light Grey
+      </div>
+      <div className="color-option" onClick={() => onColorChange('lightgreen')}>
+        Light Green
+      </div>
+      <div className="color-option" onClick={() => onColorChange('lightyellow')}>
+        Light Yellow
+      </div>
+      <div className="color-option" onClick={() => onColorChange('#FFCCCB')}>
+        Light Red
+      </div>
+      <div className="color-option" onClick={() => onColorChange('lightblue')}>
+        Light Blue
+      </div>
+    </div>
+  );
+};
+
+const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
+  const [blockColors, setBlockColors] = useState({}); // State to manage block colors
+
+  const blockColor = blockColors[id] || color;
+
+  const [{ isDragging }, drag] = useDrag({
+    type: 'BLOCK',
+    item: { id, swimlane },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  const [contextMenuPosition, setContextMenuPosition] = useState(null);
+
+  const handleColorChange = (newColor) => {
+    setBlockColors((prevBlockColors) => ({
+      ...prevBlockColors,
+      [id]: newColor,
+    }));
+    setContextMenuPosition(null);
+  };
+
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    setContextMenuPosition({ top: e.clientY, left: e.clientX });
+  };
+
+  return (
+    <div
+      ref={drag}
+      className={`block ${isDragging ? 'dragging' : ''}`}
+      style={{ backgroundColor: blockColor }}
+      onContextMenu={handleContextMenu}
+    >
+      {text}
+      {onMoveBlock && <span className="move-icon"></span>}
+      {contextMenuPosition && (
+        <ContextMenu
+          top={contextMenuPosition.top}
+          left={contextMenuPosition.left}
+          onClose={() => setContextMenuPosition(null)}
+          onColorChange={handleColorChange}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Block;
+
+import React from 'react';
+import { useDrop } from 'react-dnd';
+
+const Lane = ({ title, onDropBlock, children }) => {
+  const [{ isOver }, drop] = useDrop({
+    accept: 'BLOCK',
+    drop: item => {
+      onDropBlock(item.id, title);
+    },
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+    }),
+  });
+
+  return (
+    <div ref={drop} className={`lane ${isOver ? 'highlighted' : ''}`}>
+      <div className="blocks">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+export default Lane;
+import React from 'react';
+import './Sidebar.css';
+
+const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset }) => {
+  const handleSidebarClick = (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
+      // Prevent expansion if the clicked element is an input, select, or button
+      return;
+    }
+    onToggle();
+  };
+
+  return (
+    <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
+      <button className="generate-button" onClick={onGenerateImage}>
+        Generate PNG
+      </button>
+      <button className="reset-button" onClick={onReset}>
+        Reset
+      </button>
+    </div>
+  );
+};
+
+export default Sidebar;
+
+.sidebar {
+  width: 200px;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: -170px;
+  transition: left 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.sidebar.expanded {
+  left: 0;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.generate-button {
+  background-color: transparent; /* Set the background color as transparent */
+  border: 1px solid #333; /* Add a white solid line on all four sides */
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 15px; /* Add padding for a better visual appearance */
+  width: 80%; /* Set a width to make buttons visually appealing */
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.generate-button:hover {
+  background-color: #311;
+}
+
+.reset-button {
+  background-color: transparent; /* Set the background color as transparent */
+  border: 1px solid #333; /* Add a white solid line on all four sides */
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 15px; /* Add padding for a better visual appearance */
+  width: 80%; /* Set a width to make buttons visually appealing */
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.reset-button:hover {
+  background-color: #311;
+}

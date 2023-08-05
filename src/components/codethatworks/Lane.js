@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
-const Lane = ({ title, onDropBlock, children }) => {
+const Lane = ({ title, onDropBlock, onResetColors, children }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'BLOCK',
     drop: item => {
