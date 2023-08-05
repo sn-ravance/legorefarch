@@ -9,6 +9,9 @@
     "dom-to-image": "^2.6.0",
     "file-saver": "^2.0.5",
     "file-server": "^2.2.1",
+    "html-to-image": "^1.11.11",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
     "react-dnd": "^16.0.1",
@@ -16,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-flow": "^1.0.3",
     "react-scripts": "5.0.1",
+    "svg.js": "^2.7.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

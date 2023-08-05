@@ -46,7 +46,18 @@ function create_or_append_output_file {
     done
 }
 
+# Create or append to the versioned output file
+function copy_org_file {
+    for file in $files_to_process; do
+        if [ -f "$file" ]; then
+            echo "Making a copy of $file"
+            cp $file .
+        fi
+    done
+}
+
 increment_version
+copy_org_file
 create_or_append_output_file
 
 echo "The ${output_filename} has been versioned as ${versioned_output_filename}"

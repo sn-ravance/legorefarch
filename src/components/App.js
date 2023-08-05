@@ -5,16 +5,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import Swimlane from './components/Swimlane';
 import { saveAs } from 'file-saver';
 import domtoimage from 'dom-to-image';
-import Sidebar from './components/Sidebar';
 
 function App() {
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
-
-  const toggleSidebar = () => {
-    setSidebarExpanded(!sidebarExpanded);
-  };
-
-  const initialBlocks = [
+  const masterBlocksList = [
     { id: 1, color: 'lightgreen', text: 'Authentication & Password Management', swimlane: 'Access Control' },
     { id: 2, color: 'lightgreen', text: 'Authorization & User Role Management', swimlane: 'Access Control' },
     { id: 3, color: 'lightgreen', text: 'Account Management', swimlane: 'Access Control' },
@@ -67,11 +60,11 @@ function App() {
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
   ];
 
-  const handleReset = () => {
-    setBlocks([...initialBlocks]);
-  };
+  const [blocks, setBlocks] = useState(masterBlocksList);
 
-  const [blocks, setBlocks] = useState(initialBlocks);
+  const handleReset = () => {
+    setBlocks(masterBlocksList);
+  };
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
     setBlocks((prevBlocks) =>
@@ -113,6 +106,7 @@ function App() {
       console.error('Error generating image:', error);
     }
   };
+  
 
   // Helper function to convert data URL to Blob
   function dataURLtoBlob(dataUrl) {
@@ -129,27 +123,18 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar
-        expanded={sidebarExpanded}
-        onToggle={toggleSidebar}
-        onGenerateImage={handleGenerateImage}
-        onReset={handleReset}
-      />
-      <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
-        <div className="center-container">
-          <h1>RefArch Diagram Generator</h1>
-          <DndProvider backend={HTML5Backend}>
-            <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
-            <Swimlane
-              blocks={blocks}
-              onMoveBlock={handleMoveBlock}
-              onGenerateImage={handleGenerateImage}
-              onReset={handleReset}
-            />
-            </div>
-          </DndProvider>
+      <h1>RefArch Diagram Generator</h1>
+      <DndProvider backend={HTML5Backend}>
+        <div className="grid-container">
+        <Swimlane
+          blocks={blocks}
+          onMoveBlock={handleMoveBlock}
+        />
         </div>
-      </main>
+        <div className="download-settings">
+          <button onClick={handleGenerateImage}>Generate PNG</button> | <button onClick={handleReset}>Reset to Default</button>
+        </div>
+      </DndProvider>
     </div>
   );
 }
