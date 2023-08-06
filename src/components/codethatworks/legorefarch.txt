@@ -8,11 +8,7 @@ import domtoimage from 'dom-to-image';
 import Sidebar from './components/Sidebar';
 
 function App() {
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
-
-  const toggleSidebar = () => {
-    setSidebarExpanded(!sidebarExpanded);
-  };
+ 
 
   const initialBlocks = [
     { id: 1, color: 'lightgreen', text: 'Authentication & Password Management', swimlane: 'Access Control' },
@@ -72,35 +68,17 @@ function App() {
     { id: 55, color: 'lightblue', text: 'Not Applicable', swimlane: 'Legend' },
   ];
 
-  const [blockColors, setBlockColors] = useState(() => {
-    // Initialize block colors using initialBlocks
-    const initialBlockColors = initialBlocks.reduce((acc, block) => {
-      acc[block.id] = block.color;
-      return acc;
-    }, {});
-    return initialBlockColors;
-  });
+
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [blocks, setBlocks] = useState(initialBlocks);
+
+  const toggleSidebar = () => {
+    setSidebarExpanded(!sidebarExpanded);
+  };
 
   const handleAddBlock = (newBlock) => {
     setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
   };
-
-  const handleReset = () => {
-    const resetBlocks = initialBlocks.map((block) => ({
-      ...block,
-      color: blockColors[block.id] || block.color, // Use blockColors to reset the color
-    }));
-    setBlocks(resetBlocks);
-  
-    // Reset block colors for all blocks using initial colors
-    const resetBlockColors = initialBlocks.reduce((acc, block) => {
-      acc[block.id] = block.color;
-      return acc;
-    }, {});
-    setBlockColors(resetBlockColors); // Reset blockColors to match initial colors
-  };
-  
-  const [blocks, setBlocks] = useState(initialBlocks);
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
     setBlocks((prevBlocks) =>
@@ -155,6 +133,12 @@ function App() {
     }
     return new Blob([u8arr], { type: mime });
   }
+
+  const handleReset = () => {
+    //console.log("Resetting blocks to initial state");
+    //setBlocks([...initialBlocks]);
+    window.location.reload();
+  };
 
   return (
     <div className="App">
