@@ -1,6 +1,6 @@
 # RefArch Diagram Generator
 
-A React application that allows you to generate and visualize a security focused reference architecture diagrams using a swimlane layout. The application provides drag-and-drop functionality for creating, moving, and organizing blocks within swimlanes. It is designed to assist in planning and visualizing various components of an architectural design.
+A React application that allows you to generate and visualize a security focused reference architecture diagram using a swimlane layout. The application provides drag-and-drop functionality for creating, moving, and organizing blocks within swimlanes. It is designed to assist in planning and visualizing various components of an architectural design.
 
 ## Features
 
