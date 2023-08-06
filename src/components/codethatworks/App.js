@@ -65,6 +65,11 @@ function App() {
     { id: 48, color: 'lightgreen', text: 'Patch, Software & Firmware Management', swimlane: 'Operations Support & Maintenance' },
     { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance' },
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
+    { id: 51, color: 'lightgrey', text: 'TBD/Unknown', swimlane: 'Legend' },
+    { id: 52, color: 'lightgreen', text: 'Compliant', swimlane: 'Legend' },
+    { id: 53, color: 'lightyellow', text: 'Partially Compliant', swimlane: 'Legend' },
+    { id: 54, color: '#FFCCCB', text: 'Not Compliant', swimlane: 'Legend' },
+    { id: 55, color: 'lightblue', text: 'Not Applicable', swimlane: 'Legend' },
   ];
 
   const [blockColors, setBlockColors] = useState(() => {

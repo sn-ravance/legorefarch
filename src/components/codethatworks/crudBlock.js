@@ -1,22 +1,8 @@
 // crudBlock.js
 import React, { useState } from 'react';
-import { useDrag } from 'react-dnd';
 
 const CrudBlock = ({ onAddBlock }) => {
   const [newBlockText, setNewBlockText] = useState('');
-
-  const [{ isDragging }, drag] = useDrag({
-    type: 'BLOCK',
-    item: {
-      id: Date.now(), // Generate a unique ID for the new block
-      color: 'lightgrey', // Default color
-      swimlane: 'Access Control', // Default swimlane
-      text: newBlockText,
-    },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  });
 
   const handleTextChange = (e) => {
     setNewBlockText(e.target.value);
@@ -27,7 +13,7 @@ const CrudBlock = ({ onAddBlock }) => {
       onAddBlock({
         id: Date.now(),
         color: 'lightgrey',
-        swimlane: 'Access Control',
+        swimlane: 'Legend',
         text: newBlockText,
       });
       setNewBlockText('');
@@ -36,8 +22,7 @@ const CrudBlock = ({ onAddBlock }) => {
 
   return (
     <div
-      ref={drag}
-      className={`block ${isDragging ? 'dragging' : ''}`}
+      className={`addblock`}
       style={{ backgroundColor: 'lightgrey' }}
     >
       <input

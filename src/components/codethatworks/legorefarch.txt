@@ -65,6 +65,11 @@ function App() {
     { id: 48, color: 'lightgreen', text: 'Patch, Software & Firmware Management', swimlane: 'Operations Support & Maintenance' },
     { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance' },
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
+    { id: 51, color: 'lightgrey', text: 'TBD/Unknown', swimlane: 'Legend' },
+    { id: 52, color: 'lightgreen', text: 'Compliant', swimlane: 'Legend' },
+    { id: 53, color: 'lightyellow', text: 'Partially Compliant', swimlane: 'Legend' },
+    { id: 54, color: '#FFCCCB', text: 'Not Compliant', swimlane: 'Legend' },
+    { id: 55, color: 'lightblue', text: 'Not Applicable', swimlane: 'Legend' },
   ];
 
   const [blockColors, setBlockColors] = useState(() => {
@@ -190,7 +195,6 @@ body, h1, h2, h3, p, ul, li {
 .App {
   display: flex;
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
   color: #333;
   min-height: 100vh;
   margin: 0;
@@ -260,10 +264,9 @@ body, h1, h2, h3, p, ul, li {
 /* Styling for the lanes */
 .lane {
   padding: 10px;
-  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Expand to fill available space */
+  flex-grow: flex; /* Expand to fill available space */
 }
 
 .blocks {
@@ -272,9 +275,9 @@ body, h1, h2, h3, p, ul, li {
 }
 
 .block {
-  max-width: 250px;
-  width: 250px;
-  height: 50px;
+  max-width: 350px;
+  width: 279px;
+  height: 65px;
   margin: 0 5px 5px 0;
   padding: 5px;
   border: 1px solid #333;
@@ -311,7 +314,7 @@ body, h1, h2, h3, p, ul, li {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Ensure full viewport height */
+  height: 115vh; /* Ensure full viewport height */
   margin: 0 auto; /* Center horizontally */
 }
 
@@ -338,6 +341,7 @@ const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks }) => {
     'Secure SDLC & Security Processes',
     'Design',
     'Operations Support & Maintenance',
+    'Legend',
   ];
 
   const handleDropBlock = (blockId, targetSwimlane) => {
@@ -551,23 +555,9 @@ const Lane = ({ title, onDropBlock, children }) => {
 export default Lane;
 // crudBlock.js
 import React, { useState } from 'react';
-import { useDrag } from 'react-dnd';
 
 const CrudBlock = ({ onAddBlock }) => {
   const [newBlockText, setNewBlockText] = useState('');
-
-  const [{ isDragging }, drag] = useDrag({
-    type: 'BLOCK',
-    item: {
-      id: Date.now(), // Generate a unique ID for the new block
-      color: 'lightgrey', // Default color
-      swimlane: 'Access Control', // Default swimlane
-      text: newBlockText,
-    },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  });
 
   const handleTextChange = (e) => {
     setNewBlockText(e.target.value);
@@ -578,7 +568,7 @@ const CrudBlock = ({ onAddBlock }) => {
       onAddBlock({
         id: Date.now(),
         color: 'lightgrey',
-        swimlane: 'Access Control',
+        swimlane: 'Legend',
         text: newBlockText,
       });
       setNewBlockText('');
@@ -587,8 +577,7 @@ const CrudBlock = ({ onAddBlock }) => {
 
   return (
     <div
-      ref={drag}
-      className={`block ${isDragging ? 'dragging' : ''}`}
+      className={`addblock`}
       style={{ backgroundColor: 'lightgrey' }}
     >
       <input
@@ -618,7 +607,7 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock }) =
 
   return (
     <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
-      <CrudBlock onAddBlock={onAddBlock} />
+      <CrudBlock onAddBlock={onAddBlock} className="addblock"/>
       <button className="generate-button" onClick={onGenerateImage}>
         Generate PNG
       </button>
@@ -632,13 +621,13 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock }) =
 export default Sidebar;
 
 .sidebar {
-  width: 300px;
+  width: 350px;
   height: 100%;
   background-color: #333;
   color: white;
   position: fixed;
   top: 0;
-  left: -280px;
+  left: -295px;
   transition: left 0.3s;
   display: flex;
   flex-direction: column;
@@ -689,4 +678,16 @@ export default Sidebar;
 
 .reset-button:hover {
   background-color: #311;
+}
+
+.addblock {
+  background-color: transparent; /* Set the background color as transparent */
+  border: 1px solid #333; /* Add a white solid line on all four sides */
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 5px 5px 5px 5px; /* Add padding for a better visual appearance */
+  width: 65%; /* Set a width to make buttons visually appealing */
+  text-align: center;
+  text-decoration: none;
 }

@@ -7,7 +7,6 @@ body, h1, h2, h3, p, ul, li {
 .App {
   display: flex;
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
   color: #333;
   min-height: 100vh;
   margin: 0;
@@ -77,10 +76,9 @@ body, h1, h2, h3, p, ul, li {
 /* Styling for the lanes */
 .lane {
   padding: 10px;
-  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Expand to fill available space */
+  flex-grow: flex; /* Expand to fill available space */
 }
 
 .blocks {
@@ -89,9 +87,9 @@ body, h1, h2, h3, p, ul, li {
 }
 
 .block {
-  max-width: 250px;
-  width: 250px;
-  height: 50px;
+  max-width: 350px;
+  width: 279px;
+  height: 65px;
   margin: 0 5px 5px 0;
   padding: 5px;
   border: 1px solid #333;
@@ -128,7 +126,7 @@ body, h1, h2, h3, p, ul, li {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Ensure full viewport height */
+  height: 115vh; /* Ensure full viewport height */
   margin: 0 auto; /* Center horizontally */
 }
 
