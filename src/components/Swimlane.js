@@ -9,6 +9,7 @@ const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks }) => {
     'Secure SDLC & Security Processes',
     'Design',
     'Operations Support & Maintenance',
+    'Legend',
   ];
 
   const handleDropBlock = (blockId, targetSwimlane) => {
