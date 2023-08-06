@@ -76,17 +76,49 @@ function App() {
     setSidebarExpanded(!sidebarExpanded);
   };
 
+  const [history, setHistory] = useState([initialBlocks]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  const addToHistory = (newBlocks) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    setHistory([...newHistory, newBlocks]);
+    setHistoryIndex(historyIndex + 1);
+  };
+
   const handleAddBlock = (newBlock) => {
-    setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
+    const newBlocks = [...blocks, newBlock];
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
+  };
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setBlocks(history[historyIndex - 1]);
+    }
+  };
+  
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setBlocks(history[historyIndex + 1]);
+    }
+  };
+
+  const handleDeleteBlock = (blockId) => {
+    const newBlocks = blocks.filter((block) => block.id !== blockId);
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
   };
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
-    setBlocks((prevBlocks) =>
-      prevBlocks.map((block) =>
-        block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
-      )
+    const newBlocks = blocks.map((block) =>
+      block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
     );
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
   };
+
 
   const handleGenerateImage = async () => {
     const suggestedFilename = 'Lego_RefArch.png'; // Default filename
@@ -149,6 +181,8 @@ function App() {
           onAddBlock={handleAddBlock}
           onGenerateImage={handleGenerateImage}
           onReset={handleReset}
+          onUndo={handleUndo}
+          onRedo={handleRedo}
         />
         <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
           <div className="center-container">
@@ -159,6 +193,9 @@ function App() {
                 onMoveBlock={handleMoveBlock}
                 onGenerateImage={handleGenerateImage}
                 onReset={handleReset}
+                onDeleteBlock={handleDeleteBlock}
+                onUndo={handleUndo} // Pass the undo function
+                onRedo={handleRedo} // Pass the redo function
                 setBlocks={setBlocks}
               />
             </div>
