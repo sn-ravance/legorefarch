@@ -1,10 +1,10 @@
 import React from 'react';
 import './Sidebar.css';
+import CrudBlock from './crudBlock';
 
-const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset }) => {
+const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock }) => {
   const handleSidebarClick = (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
-      // Prevent expansion if the clicked element is an input, select, or button
       return;
     }
     onToggle();
@@ -12,11 +12,12 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset }) => {
 
   return (
     <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
+      <CrudBlock onAddBlock={onAddBlock} />
       <button className="generate-button" onClick={onGenerateImage}>
         Generate PNG
       </button>
       <button className="reset-button" onClick={onReset}>
-        Reset
+        Reset All
       </button>
     </div>
   );

@@ -3,6 +3,7 @@
 /Users/robvance/Documents/GitHub/legorefarch/src/components/Swimlane.js
 /Users/robvance/Documents/GitHub/legorefarch/src/components/Block.js
 /Users/robvance/Documents/GitHub/legorefarch/src/components/Lane.js
+/Users/robvance/Documents/GitHub/legorefarch/src/components/crudBlock.js
 /Users/robvance/Documents/GitHub/legorefarch/src/components/Sidebar.js
 /Users/robvance/Documents/GitHub/legorefarch/src/components/Sidebar.css
 # Add more file paths here as needed

@@ -76,6 +76,10 @@ function App() {
     return initialBlockColors;
   });
 
+  const handleAddBlock = (newBlock) => {
+    setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
+  };
+
   const handleReset = () => {
     const resetBlocks = initialBlocks.map((block) => ({
       ...block,
@@ -149,27 +153,29 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar
-        expanded={sidebarExpanded}
-        onToggle={toggleSidebar}
-        onGenerateImage={handleGenerateImage}
-        onReset={handleReset}
-      />
-      <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
-        <div className="center-container">
-          <h1>RefArch Diagram Generator</h1>
-          <DndProvider backend={HTML5Backend}>
+      <DndProvider backend={HTML5Backend}>
+        <Sidebar
+          expanded={sidebarExpanded}
+          onToggle={toggleSidebar}
+          onAddBlock={handleAddBlock}
+          onGenerateImage={handleGenerateImage}
+          onReset={handleReset}
+        />
+        <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
+          <div className="center-container">
+            <h1>RefArch Diagram Generator</h1>
             <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
-            <Swimlane
-              blocks={blocks}
-              onMoveBlock={handleMoveBlock}
-              onGenerateImage={handleGenerateImage}
-              onReset={handleReset}
-            />
+              <Swimlane
+                blocks={blocks}
+                onMoveBlock={handleMoveBlock}
+                onGenerateImage={handleGenerateImage}
+                onReset={handleReset}
+                setBlocks={setBlocks}
+              />
             </div>
-          </DndProvider>
-        </div>
-      </main>
+          </div>
+        </main>
+      </DndProvider>
     </div>
   );
 }

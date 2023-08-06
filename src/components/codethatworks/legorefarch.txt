@@ -1,11 +1,20 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Swimlane from './components/Swimlane';
+import { saveAs } from 'file-saver';
+import domtoimage from 'dom-to-image';
+import Sidebar from './components/Sidebar';
 
 function App() {
-  const [blocks, setBlocks] = useState([
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarExpanded(!sidebarExpanded);
+  };
+
+  const initialBlocks = [
     { id: 1, color: 'lightgreen', text: 'Authentication & Password Management', swimlane: 'Access Control' },
     { id: 2, color: 'lightgreen', text: 'Authorization & User Role Management', swimlane: 'Access Control' },
     { id: 3, color: 'lightgreen', text: 'Account Management', swimlane: 'Access Control' },
@@ -56,49 +65,122 @@ function App() {
     { id: 48, color: 'lightgreen', text: 'Patch, Software & Firmware Management', swimlane: 'Operations Support & Maintenance' },
     { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance' },
     { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
-  ]);
+  ];
 
-    const diagramRef = useRef(null);
+  const [blockColors, setBlockColors] = useState(() => {
+    // Initialize block colors using initialBlocks
+    const initialBlockColors = initialBlocks.reduce((acc, block) => {
+      acc[block.id] = block.color;
+      return acc;
+    }, {});
+    return initialBlockColors;
+  });
+
+  const handleAddBlock = (newBlock) => {
+    setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
+  };
+
+  const handleReset = () => {
+    const resetBlocks = initialBlocks.map((block) => ({
+      ...block,
+      color: blockColors[block.id] || block.color, // Use blockColors to reset the color
+    }));
+    setBlocks(resetBlocks);
   
-    const handleMoveBlock = (blockId, targetSwimlane) => {
-      setBlocks((prevBlocks) =>
-        prevBlocks.map((block) =>
-          block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
-        )
-      );
-    };
+    // Reset block colors for all blocks using initial colors
+    const resetBlockColors = initialBlocks.reduce((acc, block) => {
+      acc[block.id] = block.color;
+      return acc;
+    }, {});
+    setBlockColors(resetBlockColors); // Reset blockColors to match initial colors
+  };
   
-    const handleGenerateImage = () => {
-      const svgString = new XMLSerializer().serializeToString(diagramRef.current);
-  
-      const blob = new Blob([svgString], { type: 'image/svg+xml' });
-      const svgUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = 'diagram.svg';
-      link.href = svgUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(svgUrl);
-    };
-  
-    return (
-      <div className="App">
-        <h1>RefArch Diagram Generator</h1>
-        <DndProvider backend={HTML5Backend}>
-          <div className="grid-container">
-            <Swimlane blocks={blocks} onMoveBlock={handleMoveBlock} />
-          </div>
-          <div className="download-settings">
-            <button onClick={handleGenerateImage}>Generate SVG</button>
-          </div>
-        </DndProvider>
-      </div>
+  const [blocks, setBlocks] = useState(initialBlocks);
+
+  const handleMoveBlock = (blockId, targetSwimlane) => {
+    setBlocks((prevBlocks) =>
+      prevBlocks.map((block) =>
+        block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
+      )
     );
+  };
+
+  const handleGenerateImage = async () => {
+    const suggestedFilename = 'Lego_RefArch.png'; // Default filename
+    const userFilename = window.prompt('Enter a filename for the PNG image:', suggestedFilename);
+  
+    if (!userFilename) {
+      console.log('Image generation canceled.');
+      return;
+    }
+  
+    console.log('Generating Image...');
+  
+    const gridContainer = document.querySelector('.grid-container'); // Replace with the actual CSS grid container class
+  
+    if (!gridContainer) {
+      return;
+    }
+  
+    try {
+      // Convert the grid container to a PNG image using dom-to-image
+      const image = await domtoimage.toPng(gridContainer);
+  
+      // Create a Blob from the image data URL
+      const blob = dataURLtoBlob(image);
+  
+      // Use the saveAs function to download the PNG image with the user-provided filename
+      saveAs(blob, userFilename);
+  
+      console.log('Generating Image Complete.');
+    } catch (error) {
+      console.error('Error generating image:', error);
+    }
+  };
+
+  // Helper function to convert data URL to Blob
+  function dataURLtoBlob(dataUrl) {
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
   }
-  
-  export default App;
-  
+
+  return (
+    <div className="App">
+      <DndProvider backend={HTML5Backend}>
+        <Sidebar
+          expanded={sidebarExpanded}
+          onToggle={toggleSidebar}
+          onAddBlock={handleAddBlock}
+          onGenerateImage={handleGenerateImage}
+          onReset={handleReset}
+        />
+        <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
+          <div className="center-container">
+            <h1>RefArch Diagram Generator</h1>
+            <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
+              <Swimlane
+                blocks={blocks}
+                onMoveBlock={handleMoveBlock}
+                onGenerateImage={handleGenerateImage}
+                onReset={handleReset}
+                setBlocks={setBlocks}
+              />
+            </div>
+          </div>
+        </main>
+      </DndProvider>
+    </div>
+  );
+}
+
+export default App;
 /* Reset some default browser styles */
 body, h1, h2, h3, p, ul, li {
   margin: 0;
@@ -106,8 +188,23 @@ body, h1, h2, h3, p, ul, li {
 }
 
 .App {
-  text-align: center;
-  margin-top: 20px;
+  display: flex;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  flex-grow: 1;
+  transition: margin-left 0.3s;
+  margin-left: 0;
+}
+
+.content-expanded {
+  margin-left: 200px;
 }
 
 /* Styling for the swimlane container */
@@ -209,17 +306,32 @@ body, h1, h2, h3, p, ul, li {
   padding: 5px;
 }
 
-.download-settings {
-  margin-top: 20px;
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Ensure full viewport height */
+  margin: 0 auto; /* Center horizontally */
 }
 
-/* Add more styles as needed */
+/* Center the title */
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
 
+/* Center the grid container */
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 import React from 'react';
 import Lane from './Lane';
 import Block from './Block';
 
-const Swimlane = ({ blocks, onMoveBlock }) => {
+const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks }) => {
   const actors = [
     'Access Control',
     'Data Protection',
@@ -235,6 +347,11 @@ const Swimlane = ({ blocks, onMoveBlock }) => {
     }
   };
 
+  const handleDeleteBlock = (blockId) => {
+    // Update your state to remove the block with the given blockId
+    setBlocks((prevBlocks) => prevBlocks.filter((block) => block.id !== blockId));
+  };
+
   return (
     <div className="swimlane-container">
       <div className="lanes-box">
@@ -242,7 +359,7 @@ const Swimlane = ({ blocks, onMoveBlock }) => {
           <div className="row" key={actor}>
             <div className="actors-cell">
               <div className="actor">
-                {actor}
+                <h3>{actor}</h3>
               </div>
             </div>
             <div className="lanes-cell">
@@ -256,6 +373,9 @@ const Swimlane = ({ blocks, onMoveBlock }) => {
                       color={block.color}
                       text={block.text}
                       onMoveBlock={onMoveBlock}
+                      onDeleteBlock={handleDeleteBlock}
+                      blocks={blocks}
+                      setBlocks={setBlocks}
                     />
                   ))}
               </Lane>
@@ -268,36 +388,62 @@ const Swimlane = ({ blocks, onMoveBlock }) => {
 };
 
 export default Swimlane;
-
 import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 
-const ContextMenu = ({ top, left, onClose, onColorChange }) => {
+const ContextMenu = ({ top, left, onClose, onColorChange, onDelete }) => {
   return (
-    <div
-      className="context-menu"
-      style={{ top: `${top}px`, left: `${left}px` }}
-    >
-      <div className="color-option" onClick={() => onColorChange('lightgrey')}>
+    <div className="context-menu" style={{ top: `${top}px`, left: `${left}px` }}>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightgrey')}
+        style={{ backgroundColor: 'lightgrey' }}
+      >
         Light Grey
       </div>
-      <div className="color-option" onClick={() => onColorChange('lightgreen')}>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightgreen')}
+        style={{ backgroundColor: 'lightgreen' }}
+      >
         Light Green
       </div>
-      <div className="color-option" onClick={() => onColorChange('lightyellow')}>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightyellow')}
+        style={{ backgroundColor: 'lightyellow' }}
+      >
         Light Yellow
       </div>
-      <div className="color-option" onClick={() => onColorChange('#FFCCCB')}>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('#FFCCCB')}
+        style={{ backgroundColor: '#FFCCCB' }}
+      >
         Light Red
       </div>
-      <div className="color-option" onClick={() => onColorChange('lightblue')}>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightblue')}
+        style={{ backgroundColor: 'lightblue' }}
+      >
         Light Blue
+      </div>
+      <div className="color-option delete-option" onClick={onDelete}>
+        Delete
       </div>
     </div>
   );
 };
 
-const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
+const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, setBlocks }) => {
+  const [blockColors, setBlockColors] = useState({}); // State to manage block colors
+  const [editedText, setEditedText] = useState(text); // State to manage the edited text
+  const [isEditing, setIsEditing] = useState(false); // State to track if the block is being edited
+  const [contextMenuPosition, setContextMenuPosition] = useState(null);
+
+  const blockColor = blockColors[id] || color;
+
   const [{ isDragging }, drag] = useDrag({
     type: 'BLOCK',
     item: { id, swimlane },
@@ -306,11 +452,11 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
     }),
   });
 
-  const [blockColor, setBlockColor] = useState(color);
-  const [contextMenuPosition, setContextMenuPosition] = useState(null);
-
   const handleColorChange = (newColor) => {
-    setBlockColor(newColor);
+    setBlockColors((prevBlockColors) => ({
+      ...prevBlockColors,
+      [id]: newColor,
+    }));
     setContextMenuPosition(null);
   };
 
@@ -319,14 +465,50 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
     setContextMenuPosition({ top: e.clientY, left: e.clientX });
   };
 
+  const handleDelete = () => {
+    // Call the onDeleteBlock function to delete the block
+    onDeleteBlock(id);
+    setContextMenuPosition(null);
+    const newBlocks = blocks.filter((block) => block.id !== id);
+    setBlocks(newBlocks);
+  };
+
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleTextChange = (e) => {
+    setEditedText(e.target.value);
+  };
+
+  const handleTextBlur = () => {
+    setIsEditing(false);
+    if (editedText.trim() !== '') {
+      setEditedText(editedText);
+    } else {
+      setEditedText(text || 'Edit Me!');
+    }
+  };
+
   return (
     <div
       ref={drag}
       className={`block ${isDragging ? 'dragging' : ''}`}
       style={{ backgroundColor: blockColor }}
       onContextMenu={handleContextMenu}
+      onDoubleClick={handleDoubleClick} // Handle double-click
     >
-      {text}
+      {isEditing ? (
+        <input
+          type="text"
+          value={editedText}
+          onChange={handleTextChange}
+          onBlur={handleTextBlur}
+          autoFocus
+        />
+      ) : (
+        <div>{editedText}</div>
+      )}
       {onMoveBlock && <span className="move-icon"></span>}
       {contextMenuPosition && (
         <ContextMenu
@@ -334,11 +516,11 @@ const Block = ({ id, color, text, swimlane, onMoveBlock }) => {
           left={contextMenuPosition.left}
           onClose={() => setContextMenuPosition(null)}
           onColorChange={handleColorChange}
+          onDelete={handleDelete} 
         />
       )}
     </div>
   );
-  
 };
 
 export default Block;
@@ -367,4 +549,144 @@ const Lane = ({ title, onDropBlock, children }) => {
 };
 
 export default Lane;
+// crudBlock.js
+import React, { useState } from 'react';
+import { useDrag } from 'react-dnd';
 
+const CrudBlock = ({ onAddBlock }) => {
+  const [newBlockText, setNewBlockText] = useState('');
+
+  const [{ isDragging }, drag] = useDrag({
+    type: 'BLOCK',
+    item: {
+      id: Date.now(), // Generate a unique ID for the new block
+      color: 'lightgrey', // Default color
+      swimlane: 'Access Control', // Default swimlane
+      text: newBlockText,
+    },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  const handleTextChange = (e) => {
+    setNewBlockText(e.target.value);
+  };
+
+  const handleAddBlock = () => {
+    if (newBlockText) {
+      onAddBlock({
+        id: Date.now(),
+        color: 'lightgrey',
+        swimlane: 'Access Control',
+        text: newBlockText,
+      });
+      setNewBlockText('');
+    }
+  };
+
+  return (
+    <div
+      ref={drag}
+      className={`block ${isDragging ? 'dragging' : ''}`}
+      style={{ backgroundColor: 'lightgrey' }}
+    >
+      <input
+        type="text"
+        value={newBlockText}
+        onChange={handleTextChange}
+        placeholder="Enter text"
+      />
+      <button onClick={handleAddBlock}>Add Block</button>
+    </div>
+  );
+};
+
+export default CrudBlock;
+
+import React from 'react';
+import './Sidebar.css';
+import CrudBlock from './crudBlock';
+
+const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock }) => {
+  const handleSidebarClick = (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
+      return;
+    }
+    onToggle();
+  };
+
+  return (
+    <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
+      <CrudBlock onAddBlock={onAddBlock} />
+      <button className="generate-button" onClick={onGenerateImage}>
+        Generate PNG
+      </button>
+      <button className="reset-button" onClick={onReset}>
+        Reset All
+      </button>
+    </div>
+  );
+};
+
+export default Sidebar;
+
+.sidebar {
+  width: 300px;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: -280px;
+  transition: left 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.sidebar.expanded {
+  left: 0;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.generate-button {
+  background-color: transparent; /* Set the background color as transparent */
+  border: 1px solid #333; /* Add a white solid line on all four sides */
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 15px; /* Add padding for a better visual appearance */
+  width: 80%; /* Set a width to make buttons visually appealing */
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.generate-button:hover {
+  background-color: #311;
+}
+
+.reset-button {
+  background-color: transparent; /* Set the background color as transparent */
+  border: 1px solid #333; /* Add a white solid line on all four sides */
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 15px; /* Add padding for a better visual appearance */
+  width: 80%; /* Set a width to make buttons visually appealing */
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.reset-button:hover {
+  background-color: #311;
+}
