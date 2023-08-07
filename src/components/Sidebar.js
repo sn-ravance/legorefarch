@@ -12,6 +12,7 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onU
 
   return (
     <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
+      <div className="sidebar-divider"></div>
       <CrudBlock onAddBlock={onAddBlock} className="addblock" />
       <div className="sidebar-divider"></div>
       <button className="generate-button" onClick={onGenerateImage}>

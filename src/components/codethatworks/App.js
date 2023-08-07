@@ -6,87 +6,128 @@ import Swimlane from './components/Swimlane';
 import { saveAs } from 'file-saver';
 import domtoimage from 'dom-to-image';
 import Sidebar from './components/Sidebar';
+import Tooltip from './components/Tooltip';
 
 function App() {
  
 
   const initialBlocks = [
-    { id: 1, color: 'lightgreen', text: 'Authentication & Password Management', swimlane: 'Access Control' },
-    { id: 2, color: 'lightgreen', text: 'Authorization & User Role Management', swimlane: 'Access Control' },
-    { id: 3, color: 'lightgreen', text: 'Account Management', swimlane: 'Access Control' },
-    { id: 4, color: 'lightgreen', text: 'AV and Anti-Malware', swimlane: 'Data Protection' },
-    { id: 5, color: 'lightgreen', text: 'Cryptography', swimlane: 'Data Protection' },
-    { id: 6, color: 'lightgreen', text: 'Filesystem Security & Data Access', swimlane: 'Data Protection' },
-    { id: 7, color: 'lightgreen', text: 'Secure File Transfer', swimlane: 'Data Protection' },
-    { id: 8, color: 'lightgreen', text: 'Data Backups', swimlane: 'Data Protection' },
-    { id: 9, color: 'lightgreen', text: 'Certificate & PKI', swimlane: 'Data Protection' },
-    { id: 10, color: 'lightgreen', text: 'Application Firewall & WAF', swimlane: 'Data Protection' },
-    { id: 11, color: 'lightblue', text: 'Secure Data Destruction', swimlane: 'Data Protection' },
-    { id: 12, color: 'lightgreen', text: 'Anomaly Detection', swimlane: 'Data Protection' },
-    { id: 13, color: 'lightgreen', text: 'Network Detection & Response', swimlane: 'Data Protection' },
-    { id: 14, color: 'lightgreen', text: 'SSDLC', swimlane: 'Secure SDLC & Security Processes' },
-    { id: 15, color: 'lightgreen', text: 'Secure Coding Best Practices', swimlane: 'Secure SDLC & Security Processes' },
-    { id: 16, color: 'lightgreen', text: 'Pen Testing', swimlane: 'Secure SDLC & Security Processes' },
-    { id: 17, color: 'lightgreen', text: 'Security Review', swimlane: 'Secure SDLC & Security Processes' },
-    { id: 18, color: 'lightgreen', text: 'Threat Modeling', swimlane: 'Secure SDLC & Security Processes' },
-    { id: 19, color: 'lightgreen', text: 'Security Requirements (Policy + Compliance)', swimlane: 'Secure SDLC & Security Processes' },
-    { id: 20, color: 'lightgreen', text: 'Diaster Recover & Business Continuity', swimlane: 'Secure SDLC & Security Processes' },
-    { id: 21, color: 'lightgreen', text: 'Non-Prod Env Mgmnt', swimlane: 'Design' },
-    { id: 22, color: 'lightgreen', text: 'Configuration Management', swimlane: 'Design' },
-    { id: 23, color: 'lightblue', text: 'Data Security', swimlane: 'Design' },
-    { id: 24, color: 'lightgreen', text: 'End-point Security', swimlane: 'Design' },
-    { id: 25, color: 'lightgreen', text: 'Secure Code', swimlane: 'Design' },
-    { id: 26, color: 'lightgreen', text: 'Network Security', swimlane: 'Design' },
-    { id: 27, color: 'lightgreen', text: 'Network/Micro Segmentation', swimlane: 'Design' },
-    { id: 28, color: 'lightgreen', text: 'High Avai & DDoS Protection', swimlane: 'Design' },
-    { id: 29, color: 'lightblue', text: 'Mobile', swimlane: 'Design' },
-    { id: 30, color: 'lightgreen', text: 'Data Classification', swimlane: 'Design' },
-    { id: 31, color: 'lightgreen', text: 'Remote Access', swimlane: 'Design' },
-    { id: 32, color: 'lightgreen', text: 'Standard System Image (CIS Hardening)', swimlane: 'Design' },
-    { id: 33, color: 'lightgreen', text: 'Services & Capability Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 34, color: 'lightgreen', text: 'Training & Certification', swimlane: 'Operations Support & Maintenance' },
-    { id: 35, color: 'lightgreen', text: 'Metrics & Reporting', swimlane: 'Operations Support & Maintenance' },
-    { id: 36, color: 'lightgreen', text: 'File Integrity Monitoring', swimlane: 'Operations Support & Maintenance' },
-    { id: 37, color: 'lightgreen', text: 'Whitelisting', swimlane: 'Operations Support & Maintenance' },
-    { id: 38, color: 'lightgreen', text: 'Outage Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 39, color: 'lightgreen', text: 'Code & Deployment Automation', swimlane: 'Operations Support & Maintenance' },
-    { id: 40, color: 'lightgreen', text: 'Log & Monitoring', swimlane: 'Operations Support & Maintenance' },
-    { id: 41, color: 'lightgreen', text: 'Vulnerability Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 42, color: 'lightgreen', text: 'Asset Management (Applications & Hardware)', swimlane: 'Operations Support & Maintenance' },
-    { id: 43, color: 'lightgreen', text: 'Data Retention', swimlane: 'Operations Support & Maintenance' },
-    { id: 44, color: 'lightgreen', text: 'Compliance & Audit Support', swimlane: 'Operations Support & Maintenance' },
-    { id: 45, color: 'lightgreen', text: 'Automation', swimlane: 'Operations Support & Maintenance' },
-    { id: 46, color: 'lightgreen', text: 'Defect Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 47, color: 'lightgreen', text: 'Capacity & Scalability Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 48, color: 'lightgreen', text: 'Patch, Software & Firmware Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance' },
-    { id: 51, color: 'lightgrey', text: 'TBD/Unknown', swimlane: 'Legend' },
-    { id: 52, color: 'lightgreen', text: 'Compliant', swimlane: 'Legend' },
-    { id: 53, color: 'lightyellow', text: 'Partially Compliant', swimlane: 'Legend' },
-    { id: 54, color: '#FFCCCB', text: 'Not Compliant', swimlane: 'Legend' },
-    { id: 55, color: 'lightblue', text: 'Not Applicable', swimlane: 'Legend' },
+    { id: 1, color: 'lightgreen', text: 'Authentication & Password Management', swimlane: 'Access Control', tooltipText: 'Tooltip' },
+    { id: 2, color: 'lightgreen', text: 'Authorization & User Role Management', swimlane: 'Access Control', tooltipText: 'Tooltip' },
+    { id: 3, color: 'lightgreen', text: 'Account Management', swimlane: 'Access Control', tooltipText: 'Tooltip' },
+    { id: 4, color: 'lightgreen', text: 'AV and Anti-Malware', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 5, color: 'lightgreen', text: 'Cryptography', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 6, color: 'lightgreen', text: 'Filesystem Security & Data Access', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 7, color: 'lightgreen', text: 'Secure File Transfer', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 8, color: 'lightgreen', text: 'Data Backups', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 9, color: 'lightgreen', text: 'Certificate & PKI', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 10, color: 'lightgreen', text: 'Application Firewall & WAF', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 11, color: 'lightblue', text: 'Secure Data Destruction', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 12, color: 'lightgreen', text: 'Anomaly Detection', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 13, color: 'lightgreen', text: 'Network Detection & Response', swimlane: 'Data Protection', tooltipText: 'Tooltip' },
+    { id: 14, color: 'lightgreen', text: 'SSDLC', swimlane: 'Secure SDLC & Security Processes', tooltipText: 'Tooltip' },
+    { id: 15, color: 'lightgreen', text: 'Secure Coding Best Practices', swimlane: 'Secure SDLC & Security Processes', tooltipText: 'Tooltip' },
+    { id: 16, color: 'lightgreen', text: 'Pen Testing', swimlane: 'Secure SDLC & Security Processes', tooltipText: 'Tooltip' },
+    { id: 17, color: 'lightgreen', text: 'Security Review', swimlane: 'Secure SDLC & Security Processes', tooltipText: 'Tooltip' },
+    { id: 18, color: 'lightgreen', text: 'Threat Modeling', swimlane: 'Secure SDLC & Security Processes', tooltipText: 'Tooltip' },
+    { id: 19, color: 'lightgreen', text: 'Security Requirements (Policy + Compliance)', swimlane: 'Secure SDLC & Security Processes', tooltipText: 'Tooltip' },
+    { id: 20, color: 'lightgreen', text: 'Diaster Recover & Business Continuity', swimlane: 'Secure SDLC & Security Processes', tooltipText: 'Tooltip' },
+    { id: 21, color: 'lightgreen', text: 'Non-Prod Env Mgmnt', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 22, color: 'lightgreen', text: 'Configuration Management', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 23, color: 'lightblue', text: 'Data Security', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 24, color: 'lightgreen', text: 'End-point Security', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 25, color: 'lightgreen', text: 'Secure Code', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 26, color: 'lightgreen', text: 'Network Security', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 27, color: 'lightgreen', text: 'Network/Micro Segmentation', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 28, color: 'lightgreen', text: 'High Avai & DDoS Protection', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 29, color: 'lightblue', text: 'Mobile', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 30, color: 'lightgreen', text: 'Data Classification', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 31, color: 'lightgreen', text: 'Remote Access', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 32, color: 'lightgreen', text: 'Standard System Image (CIS Hardening)', swimlane: 'Design', tooltipText: 'Tooltip' },
+    { id: 33, color: 'lightgreen', text: 'Services & Capability Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 34, color: 'lightgreen', text: 'Training & Certification', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 35, color: 'lightgreen', text: 'Metrics & Reporting', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 36, color: 'lightgreen', text: 'File Integrity Monitoring', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 37, color: 'lightgreen', text: 'Whitelisting', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 38, color: 'lightgreen', text: 'Outage Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 39, color: 'lightgreen', text: 'Code & Deployment Automation', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 40, color: 'lightgreen', text: 'Log & Monitoring', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 41, color: 'lightgreen', text: 'Vulnerability Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 42, color: 'lightgreen', text: 'Asset Management (Applications & Hardware)', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 43, color: 'lightgreen', text: 'Data Retention', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 44, color: 'lightgreen', text: 'Compliance & Audit Support', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 45, color: 'lightgreen', text: 'Automation', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 46, color: 'lightgreen', text: 'Defect Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 47, color: 'lightgreen', text: 'Capacity & Scalability Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 48, color: 'lightgreen', text: 'Patch, Software & Firmware Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance', tooltipText: 'Tooltip' },
+    { id: 51, color: 'lightgrey', text: 'TBD/Unknown', swimlane: 'Legend', tooltipText: 'Tooltip' },
+    { id: 52, color: 'lightgreen', text: 'Compliant', swimlane: 'Legend', tooltipText: 'Tooltip' },
+    { id: 53, color: 'lightyellow', text: 'Partially Compliant', swimlane: 'Legend', tooltipText: 'Tooltip' },
+    { id: 54, color: '#FFCCCB', text: 'Not Compliant', swimlane: 'Legend', tooltipText: 'Tooltip' },
+    { id: 55, color: 'lightblue', text: 'Not Applicable', swimlane: 'Legend', tooltipText: 'Tooltip' },
   ];
-
 
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [blocks, setBlocks] = useState(initialBlocks);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarExpanded(!sidebarExpanded);
   };
 
+  const handleBlockMouseEnter = () => {
+    setShowTooltip(true);
+  };
+
+  const handleBlockMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
+  const [history, setHistory] = useState([initialBlocks]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  const addToHistory = (newBlocks) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    setHistory([...newHistory, newBlocks]);
+    setHistoryIndex(historyIndex + 1);
+  };
+
   const handleAddBlock = (newBlock) => {
-    setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
+    const newBlocks = [...blocks, newBlock];
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
+  };
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setBlocks(history[historyIndex - 1]);
+    }
+  };
+  
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setBlocks(history[historyIndex + 1]);
+    }
+  };
+
+  const handleDeleteBlock = (blockId) => {
+    const newBlocks = blocks.filter((block) => block.id !== blockId);
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
   };
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
-    setBlocks((prevBlocks) =>
-      prevBlocks.map((block) =>
-        block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
-      )
+    const newBlocks = blocks.map((block) =>
+      block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
     );
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
   };
+
 
   const handleGenerateImage = async () => {
     const suggestedFilename = 'Lego_RefArch.png'; // Default filename
@@ -149,6 +190,10 @@ function App() {
           onAddBlock={handleAddBlock}
           onGenerateImage={handleGenerateImage}
           onReset={handleReset}
+          onUndo={handleUndo}
+          onRedo={handleRedo}
+          onMouseEnter={() => handleBlockMouseEnter(block.id)}
+          onMouseLeave={handleBlockMouseLeave}
         />
         <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
           <div className="center-container">
@@ -159,7 +204,12 @@ function App() {
                 onMoveBlock={handleMoveBlock}
                 onGenerateImage={handleGenerateImage}
                 onReset={handleReset}
+                onDeleteBlock={handleDeleteBlock}
+                onUndo={handleUndo} // Pass the undo function
+                onRedo={handleRedo} // Pass the redo function
                 setBlocks={setBlocks}
+                onMouseEnter={() => handleBlockMouseEnter(block.id)}
+                onMouseLeave={handleBlockMouseLeave}
               />
             </div>
           </div>

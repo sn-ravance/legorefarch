@@ -21,6 +21,7 @@ const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks }) => {
 
   const handleDeleteBlock = (blockId) => {
     // Update your state to remove the block with the given blockId
+    onDeleteBlock(blockId);
     setBlocks((prevBlocks) => prevBlocks.filter((block) => block.id !== blockId));
   };
 

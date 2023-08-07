@@ -76,17 +76,49 @@ function App() {
     setSidebarExpanded(!sidebarExpanded);
   };
 
+  const [history, setHistory] = useState([initialBlocks]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  const addToHistory = (newBlocks) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    setHistory([...newHistory, newBlocks]);
+    setHistoryIndex(historyIndex + 1);
+  };
+
   const handleAddBlock = (newBlock) => {
-    setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
+    const newBlocks = [...blocks, newBlock];
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
+  };
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1);
+      setBlocks(history[historyIndex - 1]);
+    }
+  };
+  
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1);
+      setBlocks(history[historyIndex + 1]);
+    }
+  };
+
+  const handleDeleteBlock = (blockId) => {
+    const newBlocks = blocks.filter((block) => block.id !== blockId);
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
   };
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
-    setBlocks((prevBlocks) =>
-      prevBlocks.map((block) =>
-        block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
-      )
+    const newBlocks = blocks.map((block) =>
+      block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
     );
+    setBlocks(newBlocks);
+    addToHistory(newBlocks);
   };
+
 
   const handleGenerateImage = async () => {
     const suggestedFilename = 'Lego_RefArch.png'; // Default filename
@@ -149,6 +181,8 @@ function App() {
           onAddBlock={handleAddBlock}
           onGenerateImage={handleGenerateImage}
           onReset={handleReset}
+          onUndo={handleUndo}
+          onRedo={handleRedo}
         />
         <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
           <div className="center-container">
@@ -159,6 +193,9 @@ function App() {
                 onMoveBlock={handleMoveBlock}
                 onGenerateImage={handleGenerateImage}
                 onReset={handleReset}
+                onDeleteBlock={handleDeleteBlock}
+                onUndo={handleUndo} // Pass the undo function
+                onRedo={handleRedo} // Pass the redo function
                 setBlocks={setBlocks}
               />
             </div>
@@ -337,6 +374,7 @@ const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks }) => {
 
   const handleDeleteBlock = (blockId) => {
     // Update your state to remove the block with the given blockId
+    onDeleteBlock(blockId);
     setBlocks((prevBlocks) => prevBlocks.filter((block) => block.id !== blockId));
   };
 
@@ -581,7 +619,7 @@ import React from 'react';
 import './Sidebar.css';
 import CrudBlock from './crudBlock';
 
-const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock }) => {
+const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onUndo, onRedo }) => {
   const handleSidebarClick = (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
       return;
@@ -591,10 +629,19 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock }) =
 
   return (
     <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
-      <CrudBlock onAddBlock={onAddBlock} className="addblock"/>
+      <CrudBlock onAddBlock={onAddBlock} className="addblock" />
+      <div className="sidebar-divider"></div>
       <button className="generate-button" onClick={onGenerateImage}>
         Generate PNG
       </button>
+      <div className="sidebar-divider"></div>
+      <button className="undo-button" onClick={onUndo}>
+        Undo
+      </button>
+      <button className="redo-button" onClick={onRedo}>
+        Redo
+      </button>
+      <div className="sidebar-divider"></div>
       <button className="reset-button" onClick={onReset}>
         Reset All
       </button>
@@ -605,7 +652,7 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock }) =
 export default Sidebar;
 
 .sidebar {
-  width: 350px;
+  width: 345px;
   height: 100%;
   background-color: #333;
   color: white;
@@ -622,6 +669,12 @@ export default Sidebar;
 
 .sidebar.expanded {
   left: 0;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background-color: lightgrey;
+  margin: 10px 0;
 }
 
 .button-container {
@@ -664,13 +717,47 @@ export default Sidebar;
   background-color: #311;
 }
 
-.addblock {
+.redo-button {
   background-color: transparent; /* Set the background color as transparent */
   border: 1px solid #333; /* Add a white solid line on all four sides */
   color: white;
   cursor: pointer;
   margin-top: 20px;
-  padding: 5px 5px 5px 5px; /* Add padding for a better visual appearance */
+  padding: 10px 15px; /* Add padding for a better visual appearance */
+  width: 80%; /* Set a width to make buttons visually appealing */
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.redo-button:hover {
+  background-color: #311;
+}
+
+.undo-button {
+  background-color: transparent; /* Set the background color as transparent */
+  border: 1px solid #333; /* Add a white solid line on all four sides */
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 15px; /* Add padding for a better visual appearance */
+  width: 80%; /* Set a width to make buttons visually appealing */
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.undo-button:hover {
+  background-color: #311;
+}
+
+.addblock {
+  background-color: #311; 
+  border: 1px solid #333; 
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 10px; /* Add padding for a better visual appearance */
   width: 65%; /* Set a width to make buttons visually appealing */
   text-align: center;
   text-decoration: none;

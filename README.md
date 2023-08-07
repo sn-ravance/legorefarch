@@ -4,21 +4,25 @@ A React application that allows you to generate and visualize a security focused
 
 ## Features
 
-- Create and organize blocks representing different aspects of the architecture.
-- Drag and drop blocks within swimlanes to reorganize and update the diagram.
-- Customize block colors to indicate different categories or priorities.
-- Generate a PNG image of the diagram for documentation or sharing purposes.
+- Add blocks.
+- Drag and drop blocks within swimlanes.
+- Customize the block colors.
+- Generate a PNG image of the diagram.
 - Reset the diagram to its initial state or clear specific swimlanes.
+- Redo or unchages that were made.
+
+## Known issues
+- Colors: The Undo/Redo can't handle the colors of each Block.
+
+## The Goal
+To create an interactive tool powered by AI to create the referance architecture documentation.
 
 ## To Do
 - Export to Different Formats: In addition to PNG, provide options to export diagrams in other formats such as SVG, PDF, or even as JSON data.
 - Import and Edit Saved Diagrams: Allow users to import previously saved diagrams and edit them further.
-- Undo/Redo Functionality: Implement undo and redo functionality to allow users to revert changes made to the diagram.
-- Interactive Documentation: Integrate the generated diagrams into an interactive documentation platform where users can click on blocks for more detailed information.
 - User Authentication and Personalization: Implement user authentication to allow users to save and access their diagrams securely. Also, provide options for customizing the look and behavior of the diagram.
-- Block Grouping: Allow users to group related blocks together for better organization and visualization.
-- Print Stylesheet: Create a print-friendly stylesheet that optimizes the diagram layout for printing.
-- Keyboard Shortcuts: Provide keyboard shortcuts for common actions such as adding blocks, generating images, or resetting the diagram.
+- Wiki Stylesheet: Create a wiki friendly stylesheet that optimizes the diagram layout and format.
+- Keyboard Shortcuts: Provide keyboard shortcuts for common actions such as adding blocks, redo or undo.
 - Theming: Add support for theming the application so users can choose different visual styles.
 - Interactive Tutorials: Include interactive tutorials or tooltips to guide users through using the application effectively.
 - Export Data: Allow users to export the diagram data in a structured format (such as JSON or CSV) for further analysis or integration.

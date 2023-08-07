@@ -106,7 +106,7 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
       className={`block ${isDragging ? 'dragging' : ''}`}
       style={{ backgroundColor: blockColor }}
       onContextMenu={handleContextMenu}
-      onDoubleClick={handleDoubleClick} // Handle double-click
+      onDoubleClick={handleDoubleClick}
     >
       {isEditing ? (
         <input
