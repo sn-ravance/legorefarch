@@ -31,8 +31,8 @@
 }
 
 .generate-button {
-  background-color: transparent; /* Set the background color as transparent */
-  border: 1px solid #333; /* Add a white solid line on all four sides */
+  background-color: transparent;
+  border: 1px solid #333;
   color: white;
   cursor: pointer;
   margin-top: 20px;
