@@ -99,13 +99,14 @@
 }
 
 .addblock {
-  background-color: #311; 
-  border: 1px solid #333; 
+  border: 1px solid #f4f1f1; 
   color: white;
   cursor: pointer;
   margin-top: 20px;
   padding: 10px 10px; /* Add padding for a better visual appearance */
-  width: 65%; /* Set a width to make buttons visually appealing */
+  width: 65%; 
+  object-fit: contain;
   text-align: center;
   text-decoration: none;
+  border-radius: 5px;
 }

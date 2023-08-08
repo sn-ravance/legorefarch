@@ -29,7 +29,7 @@ const CrudBlock = ({ onAddBlock }) => {
         type="text"
         value={newBlockText}
         onChange={handleTextChange}
-        placeholder="Enter text"
+        placeholder="Block Name"
       />
       <button onClick={handleAddBlock}>Add Block</button>
     </div>

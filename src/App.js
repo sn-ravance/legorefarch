@@ -66,6 +66,7 @@ function App() {
     { id: 55, color: 'lightblue', text: 'Not Applicable', swimlane: 'Legend', tip: 'Tooltip' },
   ];
 
+  
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [blocks, setBlocks] = useState(initialBlocks);
 
@@ -164,8 +165,6 @@ function App() {
   }
 
   const handleReset = () => {
-    //console.log("Resetting blocks to initial state");
-    //setBlocks([...initialBlocks]);
     window.location.reload();
   };
 
