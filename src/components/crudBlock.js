@@ -12,7 +12,7 @@ const CrudBlock = ({ onAddBlock }) => {
     if (newBlockText) {
       onAddBlock({
         id: Date.now(),
-        color: 'lightgrey',
+        color: 'transparent',
         swimlane: 'Legend',
         text: newBlockText,
       });

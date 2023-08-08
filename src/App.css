@@ -132,7 +132,7 @@ body, h1, h2, h3, p, ul, li {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 115vh; /* Ensure full viewport height */
+  height: 150vh; /* Ensure full viewport height */
   margin: 0 auto; /* Center horizontally */
 }
 
