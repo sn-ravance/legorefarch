@@ -1,15 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import App from './App';
 import GitHubInteractions from './GitHubInteractions';
 
-const App = () => {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/" exact component={GitHubInteractions} />
-      </Switch>
-    </Router>
-  );
-};
-
-export default App;
+ReactDOM.render(
+  <Router>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/github" element={<GitHubInteractions />} />
+    </Routes>
+  </Router>,
+  document.getElementById('root')
+);

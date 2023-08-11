@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import './App.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Swimlane from './components/Swimlane';
 import { saveAs } from 'file-saver';
 import domtoimage from 'dom-to-image';
+import { Routes, Route } from 'react-router-dom';
+import { blobToBase64 } from './components/utils'; // Import the blobToBase64 utility function
+
+import Swimlane from './components/Swimlane';
+import GitHubInteractions from './components/GitHubInteractions';
 import Sidebar from './components/Sidebar';
 
 function App() {
@@ -117,8 +121,9 @@ function App() {
     addToHistory(newBlocks);
   };
 
+  const token = '95ad969bda5915a66d06fd842e73b5dc5c276b55';
 
-  const handleGenerateImage = async () => {
+  const handleGenerateAndUploadImage = async () => {
     const suggestedFilename = 'Lego_RefArch.png'; // Default filename
     const userFilename = window.prompt('Enter a filename for the PNG image:', suggestedFilename);
   
@@ -146,10 +151,42 @@ function App() {
       saveAs(blob, userFilename);
   
       console.log('Generating Image Complete.');
+
+      // Upload the generated PNG image to GitHub
+      if (token) {
+        try {
+          const formData = new FormData();
+          formData.append('file', blob, userFilename);
+  
+          // Convert the Blob to base64 using the utility function
+          const fileContent = await blobToBase64(blob);
+  
+          const response = await fetch('https://api.github.com/repos/sealmindset/SecureIoT/contents' + userFilename, {
+            method: 'PUT',
+            headers: {
+              Authorization: `token ${token}`,
+              'Content-Type': 'application/vnd.github.v3+json',
+            },
+            body: JSON.stringify({
+              message: 'Upload user-generated PNG file',
+              content: fileContent,
+            }),
+          });
+  
+          if (response.ok) {
+            console.log('File uploaded to GitHub successfully');
+          } else {
+            console.error('Error uploading file to GitHub:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error uploading file to GitHub:', error);
+        }
+      }
     } catch (error) {
       console.error('Error generating image:', error);
     }
   };
+  
 
   // Helper function to convert data URL to Blob
   function dataURLtoBlob(dataUrl) {
@@ -175,19 +212,33 @@ function App() {
           expanded={sidebarExpanded}
           onToggle={toggleSidebar}
           onAddBlock={handleAddBlock}
-          onGenerateImage={handleGenerateImage}
+          onGenerateImage={handleGenerateAndUploadImage}
           onReset={handleReset}
           onUndo={handleUndo}
           onRedo={handleRedo}
         />
         <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
+        <Routes>
+            {/* Use the element prop to render components */}
+            <Route path="/" element={<Swimlane
+                blocks={blocks}
+                onMoveBlock={handleMoveBlock}
+                onGenerateImage={handleGenerateAndUploadImage}
+                onReset={handleReset}
+                onDeleteBlock={handleDeleteBlock}
+                onUndo={handleUndo} // Pass the undo function
+                onRedo={handleRedo} // Pass the redo function
+                setBlocks={setBlocks}
+              />} />
+            <Route path="/github" element={<GitHubInteractions />} />
+          </Routes>
           <div className="center-container">
             <h1>RefArch Diagram Generator</h1>
             <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
               <Swimlane
                 blocks={blocks}
                 onMoveBlock={handleMoveBlock}
-                onGenerateImage={handleGenerateImage}
+                onGenerateImage={handleGenerateAndUploadImage}
                 onReset={handleReset}
                 onDeleteBlock={handleDeleteBlock}
                 onUndo={handleUndo} // Pass the undo function
