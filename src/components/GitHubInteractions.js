@@ -37,14 +37,11 @@ const GitHubInteractions = () => {
   const handleUpload = async () => {
     if (token && selectedFile) {
       try {
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-  
         const reader = new FileReader();
-        reader.onload = async (event) => {
-          const fileContent = event.target.result.split(',')[1]; // Get base64 content
+        reader.onload = async () => {
+          const fileContent = btoa(reader.result); // Convert binary to base64
           try {
-            const response = await fetch('https://api.github.com/repos/sealmindset/arbrepo/contents/SecureIoT/', {
+            const response = await fetch('https://api.github.com/repos/sealmindset/SecureIoT/contents/' + selectedFile.name, {
               method: 'PUT',
               headers: {
                 Authorization: `token ${token}`,
@@ -66,14 +63,13 @@ const GitHubInteractions = () => {
           }
         };
   
-        reader.readAsDataURL(selectedFile); // Read and convert to base64
+        reader.readAsBinaryString(selectedFile);
       } catch (error) {
         console.error('Error preparing file upload:', error);
       }
     }
   };
   
-
   return (
     <div>
       <h2>Your GitHub Repositories</h2>

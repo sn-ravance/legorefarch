@@ -30,83 +30,50 @@
   align-items: center;
 }
 
-.generate-button {
-  background-color: transparent;
-  border: 1px solid #333;
-  color: white;
-  cursor: pointer;
-  margin-top: 20px;
-  padding: 10px 15px; /* Add padding for a better visual appearance */
-  width: 55%; /* Set a width to make buttons visually appealing */
-  text-align: center;
-  text-decoration: none;
-  transition: background-color 0.3s, border-color 0.3s;
+.load-unsaved {
+  margin-top: 10px;
 }
 
-.generate-button:hover {
-  background-color: #311;
-}
-
+.generate-button,
+.load-button,
+.save-button,
+.redo-button,
+.undo-button,
 .reset-button {
-  background-color: transparent; /* Set the background color as transparent */
-  border: 1px solid #333; /* Add a white solid line on all four sides */
+  background-color: #3498db;
+  border: none;
   color: white;
-  cursor: pointer;
-  margin-top: 20px;
-  padding: 10px 15px; /* Add padding for a better visual appearance */
-  width: 55%; /* Set a width to make buttons visually appealing */
+  padding: 10px 20px;
   text-align: center;
   text-decoration: none;
-  transition: background-color 0.3s, border-color 0.3s;
+  display: inline-block;
+  font-size: 16px;
+  width: 60%;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
+.generate-button:hover,
+.load-button:hover,
+.save-button:hover,
+.redo-button:hover,
+.undo-button:hover,
 .reset-button:hover {
-  background-color: #311;
-}
-
-.redo-button {
-  background-color: transparent; /* Set the background color as transparent */
-  border: 1px solid #333; /* Add a white solid line on all four sides */
-  color: white;
-  cursor: pointer;
-  margin-top: 20px;
-  padding: 10px 15px; /* Add padding for a better visual appearance */
-  width: 55%; /* Set a width to make buttons visually appealing */
-  text-align: center;
-  text-decoration: none;
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-.redo-button:hover {
-  background-color: #311;
-}
-
-.undo-button {
-  background-color: transparent; /* Set the background color as transparent */
-  border: 1px solid #333; /* Add a white solid line on all four sides */
-  color: white;
-  cursor: pointer;
-  margin-top: 20px;
-  padding: 10px 15px; /* Add padding for a better visual appearance */
-  width: 55%; /* Set a width to make buttons visually appealing */
-  text-align: center;
-  text-decoration: none;
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-.undo-button:hover {
-  background-color: #311;
+  background-color: #2980b9;
 }
 
 .addblock {
-  border: 1px solid #f4f1f1; 
+  background-color: #3498db;
+  border: none;
   color: white;
-  cursor: pointer;
-  margin-top: 20px;
-  padding: 10px 10px; /* Add padding for a better visual appearance */
-  width: 55%; 
-  object-fit: contain;
+  padding: 10px 20px;
   text-align: center;
   text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 50%;
+  cursor: pointer;
   border-radius: 5px;
+  transition: background-color 0.3s;
 }

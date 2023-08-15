@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -69,7 +69,6 @@ function App() {
     { id: 54, color: '#FFCCCB', text: 'Not Compliant', swimlane: 'Legend', tip: 'Tooltip' },
     { id: 55, color: 'lightblue', text: 'Not Applicable', swimlane: 'Legend', tip: 'Tooltip' },
   ];
-
   
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [blocks, setBlocks] = useState(initialBlocks);
@@ -90,26 +89,30 @@ function App() {
   const handleAddBlock = (newBlock) => {
     const newBlocks = [...blocks, newBlock];
     setBlocks(newBlocks);
+    setUnsavedDiagram(newBlocks);
     addToHistory(newBlocks);
   };
 
   const handleUndo = () => {
     if (historyIndex > 0) {
-      setHistoryIndex(historyIndex - 1);
-      setBlocks(history[historyIndex - 1]);
+      const newIndex = historyIndex - 1; // Calculate the new index first
+      setHistoryIndex(newIndex); // Update the history index
+      setBlocks(history[newIndex]); // Use the new index to access the history state
     }
   };
-  
+
   const handleRedo = () => {
     if (historyIndex < history.length - 1) {
-      setHistoryIndex(historyIndex + 1);
-      setBlocks(history[historyIndex + 1]);
+      const newIndex = historyIndex + 1; // Calculate the new index first
+      setHistoryIndex(newIndex); // Update the history index
+      setBlocks(history[newIndex]); // Use the new index to access the history state
     }
   };
 
   const handleDeleteBlock = (blockId) => {
     const newBlocks = blocks.filter((block) => block.id !== blockId);
     setBlocks(newBlocks);
+    setUnsavedDiagram(newBlocks);
     addToHistory(newBlocks);
   };
 
@@ -118,6 +121,7 @@ function App() {
       block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
     );
     setBlocks(newBlocks);
+    setUnsavedDiagram(newBlocks);
     addToHistory(newBlocks);
   };
 
@@ -186,7 +190,6 @@ function App() {
       console.error('Error generating image:', error);
     }
   };
-  
 
   // Helper function to convert data URL to Blob
   function dataURLtoBlob(dataUrl) {
@@ -205,6 +208,63 @@ function App() {
     window.location.reload();
   };
 
+  const [unsavedDiagram, setUnsavedDiagram] = useState(null); // Store the unsaved diagram data
+
+  // Save the unsaved diagram to local storage when the blocks state changes
+  useEffect(() => {
+    localStorage.setItem('unsavedDiagram', JSON.stringify(unsavedDiagram));
+  }, [unsavedDiagram]);
+
+  const handleSaveDiagram = () => {
+    if (!unsavedDiagram) {
+      alert('No diagram to save.');
+      return;
+    }
+
+    const suggestedFilename = 'unsaved_diagram.json'; // Default filename
+    const userFilename = window.prompt('Enter a filename for the diagram:', suggestedFilename);
+
+    if (!userFilename) {
+      alert('Diagram save canceled.');
+      return;
+    }
+
+    const dataToSave = JSON.stringify(unsavedDiagram);
+    const blob = new Blob([dataToSave], { type: 'application/json' });
+
+    // Use the saveAs function to download the diagram with the user-provided filename
+    saveAs(blob, userFilename);
+
+    alert('Diagram saved successfully!');
+  }
+
+  const handleLoadDiagram = async (event) => {
+    if (!event.target.files || !event.target.files[0]) {
+      alert('No file selected.');
+      return;
+    }
+  
+    const file = event.target.files[0]; // Get the selected file
+  
+    try {
+      const fileContent = await file.text(); // Read the file content
+  
+      const loadedDiagram = JSON.parse(fileContent);
+      if (loadedDiagram && Array.isArray(loadedDiagram)) {
+        setBlocks(loadedDiagram); // Load the saved diagram
+        setUnsavedDiagram(loadedDiagram); // Update unsavedDiagram with loadedDiagram
+        addToHistory(loadedDiagram); // Add the loaded diagram to history
+        setHistoryIndex(history.length); // Set history index to the end
+        alert('Diagram loaded successfully!');
+      } else {
+        alert('Invalid JSON format.');
+      }
+    } catch (error) {
+      console.error('Error loading diagram:', error);
+      alert('Error loading diagram. Please check the console for details.');
+    }
+  };
+  
   return (
     <div className="App">
       <DndProvider backend={HTML5Backend}>
@@ -216,6 +276,8 @@ function App() {
           onReset={handleReset}
           onUndo={handleUndo}
           onRedo={handleRedo}
+          onSaveDiagram={handleSaveDiagram} 
+          onLoadDiagram={handleLoadDiagram} 
         />
         <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
         <Routes>
