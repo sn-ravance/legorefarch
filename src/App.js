@@ -266,7 +266,11 @@ function App() {
   };
   
   return (
+    <React.Fragment>
     <div className="App">
+      <h1 className="app-title">
+        RefArch Diagram Generator
+      </h1>
       <DndProvider backend={HTML5Backend}>
         <Sidebar
           expanded={sidebarExpanded}
@@ -295,7 +299,6 @@ function App() {
             <Route path="/github" element={<GitHubInteractions />} />
           </Routes>
           <div className="center-container">
-            <h1>RefArch Diagram Generator</h1>
             <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
               <Swimlane
                 blocks={blocks}
@@ -312,6 +315,7 @@ function App() {
         </main>
       </DndProvider>
     </div>
+    </React.Fragment>
   );
 }
 

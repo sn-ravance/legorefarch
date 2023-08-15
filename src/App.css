@@ -13,6 +13,25 @@ body, h1, h2, h3, p, ul, li {
   padding: 0;
 }
 
+.app-title {
+  position: fixed;
+  top: 20px;
+  left: 50px;
+  font-size: 18px;
+  padding: 10px;
+  transition: color 0.3s;
+}
+
+.expanded-title {
+  color: transparent; /* Title color when sidebar is expanded */
+  opacity: 0;
+}
+
+.collapsed-title {
+  color: black; /* Title color when the sidebar is collasped */
+  opacity: 1;
+}
+
 .content {
   flex-grow: 1;
   transition: margin-left 0.3s;
@@ -21,6 +40,7 @@ body, h1, h2, h3, p, ul, li {
 
 .content-expanded {
   margin-left: 200px;
+  opacity: 1;
 }
 
 .swimlane-container {

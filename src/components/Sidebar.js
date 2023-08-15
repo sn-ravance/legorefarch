@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
-import CrudBlock from './crudBlock';
 import LoadUnsaved from './LoadUnsaved';
+import AddBlockPopup from './AddBlockPopup';
 
 const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onUndo, onRedo, onSaveDiagram, onLoadDiagram }) => {
   const handleSidebarClick = (e) => {
@@ -17,45 +17,35 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onU
   };
 
   return (
-    <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
-      <div className="sidebar-divider"></div>
- 
-      <CrudBlock onAddBlock={onAddBlock} className="add-button" />
+    <React.Fragment>
+      <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
+        
+        <AddBlockPopup className="add-button" onAddBlock={onAddBlock} />
+        
+        <button className="save-button" onClick={onSaveDiagram}>
+          Save Diagram
+        </button>
 
-      <div className="sidebar-divider"></div>
+        <LoadUnsaved className="load-button" onLoadDiagram={onLoadDiagram} />
 
-      <button className="save-button" onClick={onSaveDiagram}>
-        Save Diagram
-      </button>
+        <button className="generate-button" onClick={onGenerateImage}>
+          Generate PNG
+        </button>
 
-      <div className="sidebar-divider"></div>
+        <button className="undo-button" onClick={onUndo}>
+          Undo
+        </button>
 
-      <LoadUnsaved className="load-button" onLoadDiagram={onLoadDiagram} />
+        <button className="redo-button" onClick={onRedo}>
+          Redo
+        </button>
 
-      <div className="sidebar-divider"></div>
+        <button className="reset-button" onClick={onReset}>
+          Reset All
+        </button>
+      </div>
 
-      <button className="generate-button" onClick={onGenerateImage}>
-        Generate PNG
-      </button>
-
-      <div className="sidebar-divider"></div>
-
-      <button className="undo-button" onClick={onUndo}>
-        Undo
-      </button>
-
-      <div className="sidebar-divider"></div>
-
-      <button className="redo-button" onClick={onRedo}>
-        Redo
-      </button>
-
-      <div className="sidebar-divider"></div>
-
-      <button className="reset-button" onClick={onReset}>
-        Reset All
-      </button>
-    </div>
+    </React.Fragment>
   );
 };
 

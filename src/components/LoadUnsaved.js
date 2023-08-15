@@ -18,7 +18,7 @@ const LoadUnsaved = ({ onLoadDiagram }) => {
   };
 
   return (
-    <div >
+    <React.Fragment>
       <input
         ref={fileInputRef}
         type="file"
@@ -27,7 +27,7 @@ const LoadUnsaved = ({ onLoadDiagram }) => {
         style={{ display: 'none' }} // Hide the input element
       />
       <button onClick={handleLoadClick} className='load-button'>Load Diagram</button>
-    </div>
+    </React.Fragment>
   );
 };
 
