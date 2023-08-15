@@ -18,10 +18,7 @@ const LoadUnsaved = ({ onLoadDiagram }) => {
   };
 
   return (
-    <div className="load-unsaved">
-      <button className="load-button" onClick={handleLoadClick}>
-        Load Diagram
-      </button>
+    <div >
       <input
         ref={fileInputRef}
         type="file"
@@ -29,6 +26,7 @@ const LoadUnsaved = ({ onLoadDiagram }) => {
         onChange={handleFileChange}
         style={{ display: 'none' }} // Hide the input element
       />
+      <button onClick={handleLoadClick} className='load-button'>Load Diagram</button>
     </div>
   );
 };

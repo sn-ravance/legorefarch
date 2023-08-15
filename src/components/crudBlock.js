@@ -21,17 +21,14 @@ const CrudBlock = ({ onAddBlock }) => {
   };
 
   return (
-    <div
-      className={`addblock`}
-      style={{ backgroundColor: 'lightgrey' }}
-    >
+    <div>
       <input
         type="text"
         value={newBlockText}
         onChange={handleTextChange}
         placeholder="Block Name"
       />
-      <button onClick={handleAddBlock}>Add Block</button>
+      <button onClick={handleAddBlock} className='add-button'>Add Block</button>
     </div>
   );
 };

@@ -24,21 +24,12 @@
   margin: 10px 0;
 }
 
-.button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.load-unsaved {
-  margin-top: 10px;
-}
-
-.generate-button,
-.load-button,
+.add-button,
 .save-button,
-.redo-button,
+.load-button,
+.generate-button,
 .undo-button,
+.redo-button,
 .reset-button {
   background-color: #3498db;
   border: none;
@@ -46,7 +37,6 @@
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size: 16px;
   width: 60%;
   cursor: pointer;
@@ -54,26 +44,12 @@
   transition: background-color 0.3s;
 }
 
-.generate-button:hover,
-.load-button:hover,
+.add-button:hover,
 .save-button:hover,
-.redo-button:hover,
+.load-button:hover,
+.generate-button:hover,
 .undo-button:hover,
+.redo-button:hover,
 .reset-button:hover {
   background-color: #2980b9;
-}
-
-.addblock {
-  background-color: #3498db;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  width: 50%;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
 }
