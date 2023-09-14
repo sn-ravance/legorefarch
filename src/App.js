@@ -33,6 +33,10 @@ function LegendSwimlane({ legendBlocks }) {
 }
 
 function App() {
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
+
   const initialBlocks = [
     { id: 1, text: 'Authentication & Password Management', swimlane: 'Access Control', tip: 'Tooltip' },
     { id: 2, text: 'Authorization & User Role Management', swimlane: 'Access Control', tip: 'Tooltip' },
@@ -110,7 +114,7 @@ function App() {
       const parsedDiagram = JSON.parse(savedDiagram);
       setBlocks(parsedDiagram.map(block => ({
         ...block,
-        color: block.color || 'transparent' // Default to transparent if no color is specified
+        color: block.color || 'lightgreen' // Default to lightgreen if no color is specified
       })));
     }
   }, []);
@@ -125,6 +129,7 @@ function App() {
       block.id === blockId ? { ...block, color: newColor } : block
     );
     setBlocks(updatedBlocks);
+    setUnsavedDiagram(updatedBlocks); // Update the unsavedDiagram state
   };
 
   const toggleSidebar = () => {
@@ -141,9 +146,10 @@ function App() {
   };
 
   const handleAddBlock = (newBlock) => {
-    const newBlocks = [...blocks, newBlock];
+    const blockWithColor = { ...newBlock, color: newBlock.color || 'lightgreen' };
+    const newBlocks = [...blocks, blockWithColor];
     setBlocks(newBlocks);
-    setUnsavedDiagram(newBlocks);
+    setUnsavedDiagram(newBlocks); // Update the unsavedDiagram state
     addToHistory(newBlocks);
   };
 
@@ -166,7 +172,7 @@ function App() {
   const handleDeleteBlock = (blockId) => {
     const newBlocks = blocks.filter((block) => block.id !== blockId);
     setBlocks(newBlocks);
-    setUnsavedDiagram(newBlocks);
+    setUnsavedDiagram(newBlocks); // Update the unsavedDiagram state
     addToHistory(newBlocks);
   };
 
@@ -175,7 +181,7 @@ function App() {
       block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
     );
     setBlocks(newBlocks);
-    setUnsavedDiagram(newBlocks);
+    setUnsavedDiagram(newBlocks); // Update the unsavedDiagram state
     addToHistory(newBlocks);
   };
 
@@ -260,6 +266,7 @@ function App() {
 
   const handleReset = () => {
     localStorage.removeItem('savedDiagram'); // Clear localStorage
+    localStorage.clear();
     window.location.reload();
   };
 
@@ -283,8 +290,13 @@ function App() {
       return;
     }
   
-    // Include block colors in the saved JSON
-    const dataToSave = JSON.stringify(unsavedDiagram);
+    // Ensure each block has a color property before saving
+    const blocksWithColors = unsavedDiagram.map(block => ({
+      ...block,
+      color: block.color || 'lightgreen'
+    }));
+  
+    const dataToSave = JSON.stringify(blocksWithColors);
     const blob = new Blob([dataToSave], { type: 'application/json' });
   
     // Use the saveAs function to download the diagram with the user-provided filename
@@ -293,7 +305,6 @@ function App() {
     alert('Diagram saved successfully!');
   };
   
-
   const handleLoadDiagram = async (event) => {
     if (!event.target.files || !event.target.files[0]) {
       alert('No file selected.');
@@ -308,7 +319,7 @@ function App() {
       if (loadedDiagram && Array.isArray(loadedDiagram)) {
         setBlocks(loadedDiagram.map(block => ({
           ...block,
-          color: block.color || 'transparent' // Default to transparent if no color is specified
+          color: block.color || 'lightgreen' // Default to lightgreen if no color is specified
         })));
       } else {
         alert('Invalid JSON format.');
