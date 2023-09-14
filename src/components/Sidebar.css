@@ -43,10 +43,13 @@
 .save-button:hover,
 .load-button:hover,
 .generate-button:hover,
-.undo-button:hover,
-.redo-button:hover,
-.reset-button:hover {
+.redo-button:hover {
   background-color: #2980b9;
+}
+
+.undo-button:hover,
+.reset-button:hover {
+  background-color: #b92929;
 }
 
 /* AddBlockPopup.css */

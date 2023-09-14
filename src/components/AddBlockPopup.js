@@ -13,7 +13,7 @@ const AddBlockPopup = ({ onAddBlock }) => {
       onAddBlock({
         id: Date.now(),
         color: 'transparent',
-        swimlane: 'Legend',
+        swimlane: 'Access Control',
         text: newBlockText,
       });
       setNewBlockText('');

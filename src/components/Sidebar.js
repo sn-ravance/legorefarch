@@ -11,11 +11,6 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onU
     onToggle();
   };
 
-  const handleLoadButtonClick = (e) => {
-    e.stopPropagation();
-    onLoadDiagram(); // Call the onLoadDiagram function without passing the event object
-  };
-
   return (
     <React.Fragment>
       <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
