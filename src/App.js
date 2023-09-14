@@ -108,14 +108,10 @@ function App() {
     const savedDiagram = localStorage.getItem('savedDiagram');
     if (savedDiagram) {
       const parsedDiagram = JSON.parse(savedDiagram);
-      setBlocks(parsedDiagram);
-  
-      // Initialize unsavedDiagram with loadedDiagram and set colors
-      const loadedUnsavedDiagram = parsedDiagram.map((block) => ({
+      setBlocks(parsedDiagram.map(block => ({
         ...block,
-        color: block.color || 'lightgreen', // Use the loaded color or default to lightgreen
-      }));
-      setUnsavedDiagram(loadedUnsavedDiagram);
+        color: block.color || 'transparent' // Default to transparent if no color is specified
+      })));
     }
   }, []);
 
@@ -125,13 +121,10 @@ function App() {
   }, [blocks]);
 
   const handleColorChange = (blockId, newColor) => {
-    const updatedBlocks = blocks.map((block) =>
+    const updatedBlocks = blocks.map(block => 
       block.id === blockId ? { ...block, color: newColor } : block
     );
     setBlocks(updatedBlocks);
-
-    // Update the unsavedDiagram state with the color changes
-    setUnsavedDiagram(updatedBlocks);  
   };
 
   const toggleSidebar = () => {
@@ -306,38 +299,17 @@ function App() {
       alert('No file selected.');
       return;
     }
-  
-    const file = event.target.files[0]; // Get the selected file
-  
+
+    const file = event.target.files[0];
+
     try {
-      const fileContent = await file.text(); // Read the file content
-  
+      const fileContent = await file.text();
       const loadedDiagram = JSON.parse(fileContent);
       if (loadedDiagram && Array.isArray(loadedDiagram)) {
-        // Load the saved diagram and set colors
-        setBlocks(
-          loadedDiagram.map((block) => ({
-            ...block,
-            color: block.color || 'lightgreen', // Use the loaded color or default to lightgreen
-          }))
-        );
-  
-        // Update unsavedDiagram with loadedDiagram
-        setUnsavedDiagram(
-          loadedDiagram.map((block) => ({
-            ...block,
-            color: block.color || 'lightgreen',
-          }))
-        );
-  
-        addToHistory(
-          loadedDiagram.map((block) => ({
-            ...block,
-            color: block.color || 'lightgreen',
-          }))
-        ); // Add the loaded diagram to history
-        setHistoryIndex(history.length); // Set history index to the end
-        alert('Diagram loaded successfully!');
+        setBlocks(loadedDiagram.map(block => ({
+          ...block,
+          color: block.color || 'transparent' // Default to transparent if no color is specified
+        })));
       } else {
         alert('Invalid JSON format.');
       }
