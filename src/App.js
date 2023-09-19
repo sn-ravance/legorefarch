@@ -11,7 +11,6 @@ import Swimlane from './components/Swimlane';
 import GitHubInteractions from './components/GitHubInteractions';
 import Sidebar from './components/Sidebar';
 
-// Define a new LegendSwimlane component
 function LegendSwimlane({ legendBlocks }) {
   return (
     <div className="legend-lane">
@@ -37,57 +36,68 @@ function App() {
     localStorage.clear();
   }, []);
 
+  function isLocalStorageAvailable() {
+    try {
+      const test = "test";
+      localStorage.setItem(test, test);
+      localStorage.removeItem(test);
+      return true;
+    } catch(e) {
+      return false;
+    }
+  };
+
   const initialBlocks = [
-    { id: 1, text: 'Authentication & Password Management', swimlane: 'Access Control', tip: 'Tooltip' },
-    { id: 2, text: 'Authorization & User Role Management', swimlane: 'Access Control', tip: 'Tooltip' },
-    { id: 3, text: 'Account Management', swimlane: 'Access Control', tip: 'Tooltip' },
-    { id: 4, text: 'AV and Anti-Malware', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 5, text: 'Cryptography', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 6, text: 'Filesystem Security & Data Access', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 7, text: 'Secure File Transfer', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 8, text: 'Data Backups', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 9, text: 'Certificate & PKI', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 10, text: 'Application Firewall & WAF', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 11, text: 'Secure Data Destruction', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 12, text: 'Anomaly Detection', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 13, text: 'Network Detection & Response', swimlane: 'Data Protection', tip: 'Tooltip' },
-    { id: 14, text: 'SSDLC', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
-    { id: 15, text: 'Secure Coding Best Practices', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
-    { id: 16, text: 'Pen Testing', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
-    { id: 17, text: 'Security Review', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
-    { id: 18, text: 'Threat Modeling', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
-    { id: 19, text: 'Security Requirements (Policy + Compliance)', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
-    { id: 20, text: 'Diaster Recover & Business Continuity', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
-    { id: 21, text: 'Non-Prod Env Mgmnt', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 22, text: 'Configuration Management', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 23, text: 'Data Security', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 24, text: 'End-point Security', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 25, text: 'Secure Code', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 26, text: 'Network Security', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 27, text: 'Network/Micro Segmentation', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 28, text: 'High Avai & DDoS Protection', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 29, text: 'Mobile', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 30, text: 'Data Classification', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 31, text: 'Remote Access', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 32, text: 'Standard System Image (CIS Hardening)', swimlane: 'Design', tip: 'Tooltip' },
-    { id: 33, text: 'Services & Capability Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 34, text: 'Training & Certification', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 35, text: 'Metrics & Reporting', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 36, text: 'File Integrity Monitoring', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 37, text: 'Whitelisting', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 38, text: 'Outage Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 39, text: 'Code & Deployment Automation', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 40, text: 'Log & Monitoring', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 41, text: 'Vulnerability Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 42, text: 'Asset Management (Applications & Hardware)', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 43, text: 'Data Retention', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 44, text: 'Compliance & Audit Support', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 45, text: 'Automation', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 46, text: 'Defect Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 47, text: 'Capacity & Scalability Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 48, text: 'Patch, Software & Firmware Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 49, text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
-    { id: 50, text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 1, color: 'lightgreen', text: 'Authentication & Password Management', swimlane: 'Access Control', tip: 'Tooltip' },
+    { id: 2, color: 'lightgreen', text: 'Authorization & User Role Management', swimlane: 'Access Control', tip: 'Tooltip' },
+    { id: 3, color: 'lightgreen', text: 'Account Management', swimlane: 'Access Control', tip: 'Tooltip' },
+    { id: 4, color: 'lightgreen', text: 'AV and Anti-Malware', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 5, color: 'lightgreen', text: 'Cryptography', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 6, color: 'lightgreen', text: 'Filesystem Security & Data Access', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 7, color: 'lightgreen', text: 'Secure File Transfer', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 8, color: 'lightgreen', text: 'Data Backups', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 9, color: 'lightgreen', text: 'Certificate & PKI', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 10, color: 'lightgreen', text: 'Application Firewall & WAF', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 11, color: 'lightgreen', text: 'Secure Data Destruction', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 12, color: 'lightgreen', text: 'Anomaly Detection', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 13, color: 'lightgreen', text: 'Network Detection & Response', swimlane: 'Data Protection', tip: 'Tooltip' },
+    { id: 14, color: 'lightgreen', text: 'SSDLC', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
+    { id: 15, color: 'lightgreen', text: 'Secure Coding Best Practices', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
+    { id: 16, color: 'lightgreen', text: 'Pen Testing', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
+    { id: 17, color: 'lightgreen', text: 'Security Review', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
+    { id: 18, color: 'lightgreen', text: 'Threat Modeling', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
+    { id: 19, color: 'lightgreen', text: 'Security Requirements (Policy + Compliance)', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
+    { id: 20, color: 'lightgreen', text: 'Diaster Recover & Business Continuity', swimlane: 'Secure SDLC & Security Processes', tip: 'Tooltip' },
+    { id: 21, color: 'lightgreen', text: 'Non-Prod Env Mgmnt', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 22, color: 'lightgreen', text: 'Configuration Management', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 23, color: 'lightgreen', text: 'Data Security', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 24, color: 'lightgreen', text: 'End-point Security', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 25, color: 'lightgreen', text: 'Secure Code', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 26, color: 'lightgreen', text: 'Network Security', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 27, color: 'lightgreen', text: 'Network/Micro Segmentation', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 28, color: 'lightgreen', text: 'High Avai & DDoS Protection', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 29, color: 'lightgreen', text: 'Mobile', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 30, color: 'lightgreen', text: 'Data Classification', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 31, color: 'lightgreen', text: 'Remote Access', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 32, color: 'lightgreen', text: 'Standard System Image (CIS Hardening)', swimlane: 'Design', tip: 'Tooltip' },
+    { id: 33, color: 'lightgreen', text: 'Services & Capability Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 34, color: 'lightgreen', text: 'Training & Certification', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 35, color: 'lightgreen', text: 'Metrics & Reporting', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 36, color: 'lightgreen', text: 'File Integrity Monitoring', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 37, color: 'lightgreen', text: 'Whitelisting', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 38, color: 'lightgreen', text: 'Outage Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 39, color: 'lightgreen', text: 'Code & Deployment Automation', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 40, color: 'lightgreen', text: 'Log & Monitoring', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 41, color: 'lightgreen', text: 'Vulnerability Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 42, color: 'lightgreen', text: 'Asset Management (Applications & Hardware)', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 43, color: 'lightgreen', text: 'Data Retention', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 44, color: 'lightgreen', text: 'Compliance & Audit Support', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 45, color: 'lightgreen', text: 'Automation', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 46, color: 'lightgreen', text: 'Defect Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 47, color: 'lightgreen', text: 'Capacity & Scalability Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 48, color: 'lightgreen', text: 'Patch, Software & Firmware Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 49, color: 'lightgreen', text: 'Intake & Offboarding Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
+    { id: 50, color: 'lightgreen', text: 'Configuration & Policy Management', swimlane: 'Operations Support & Maintenance', tip: 'Tooltip' },
   ].map((block) => ({ ...block, color: 'lightgreen' })); // Set default color
 
   const initialLegendBlocks = [
@@ -107,29 +117,47 @@ function App() {
   }));
   const [unsavedDiagram, setUnsavedDiagram] = useState(initialUnsavedDiagram); // Store the unsaved diagram data
 
-  // Load the saved diagram from local storage when the component mounts
+
+
   useEffect(() => {
-    const savedDiagram = localStorage.getItem('savedDiagram');
-    if (savedDiagram) {
-      const parsedDiagram = JSON.parse(savedDiagram);
-      setBlocks(parsedDiagram.map(block => ({
-        ...block,
-        color: block.color || 'lightgreen' // Default to lightgreen if no color is specified
-      })));
+    if (isLocalStorageAvailable()) {
+      const storedBlocks = localStorage.getItem('blocks');
+      if (storedBlocks) {
+        setBlocks(JSON.parse(storedBlocks));
+      }
+    } else {
+      console.warn("Local storage is not available.");
     }
   }, []);
 
-  // Save the diagram to local storage whenever the blocks state changes
   useEffect(() => {
-    localStorage.setItem('savedDiagram', JSON.stringify(blocks));
+    if (isLocalStorageAvailable()) {
+      try {
+        localStorage.setItem('blocks', JSON.stringify(blocks));
+      } catch (error) {
+        console.error("Failed to save blocks to local storage:", error);
+      }
+    }
   }, [blocks]);
 
+  const updateBlock = (updatedBlock) => {
+    setBlocks(prevBlocks => prevBlocks.map(block =>
+      block.id === updatedBlock.id ? updatedBlock : block
+    ));
+  };
+
+  const deleteBlock = (id) => {
+    const newBlocks = blocks.filter((block) => block.id !== id);
+    setBlocks(newBlocks);
+  };
+  
   const handleColorChange = (blockId, newColor) => {
     const updatedBlocks = blocks.map(block => 
       block.id === blockId ? { ...block, color: newColor } : block
     );
     setBlocks(updatedBlocks);
     setUnsavedDiagram(updatedBlocks); // Update the unsavedDiagram state
+    console.log('handleColorChange', blockId, newColor, blocks);
   };
 
   const toggleSidebar = () => {
@@ -289,6 +317,7 @@ function App() {
       alert('Diagram save canceled.');
       return;
     }
+
   
     // Ensure each block has a color property before saving
     const blocksWithColors = unsavedDiagram.map(block => ({
@@ -329,7 +358,7 @@ function App() {
       alert('Error loading diagram. Please check the console for details.');
     }
   };
-    
+
   return (
     <React.Fragment>
     <div className="App">
@@ -368,6 +397,8 @@ function App() {
             <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
               <Swimlane
                 blocks={blocks}
+                updateBlock={updateBlock} 
+                deleteBlock={deleteBlock}
                 onMoveBlock={handleMoveBlock}
                 onGenerateImage={handleGenerateAndUploadImage}
                 onReset={handleReset}
@@ -377,6 +408,7 @@ function App() {
                 onColorChange={handleColorChange}
                 setBlocks={setBlocks}
               />
+
               <LegendSwimlane legendBlocks={initialLegendBlocks} />
             </div>
           </div>
