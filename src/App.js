@@ -334,6 +334,19 @@ function App() {
     alert('Diagram saved successfully!');
   };
   
+  const saveBlocksToJson = () => {
+    const blockData = blocks.map(block => ({
+      id: block.id,
+      color: block.color,
+      text: block.text,
+      swimlane: block.swimlane,
+      // Add any other properties you want to save
+    }));
+    const json = JSON.stringify(blockData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    saveAs(blob, "blocks.json");
+  };
+
   const handleLoadDiagram = async (event) => {
     if (!event.target.files || !event.target.files[0]) {
       alert('No file selected.');
