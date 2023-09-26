@@ -56,10 +56,9 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
       className={`block ${isDragging ? 'dragging' : ''}`}
       style={{ backgroundColor: blockColor }}
       onContextMenu={handleRightClick}
-      onClick={() => blockURL && window.open(blockURL, '_blank')}
+      onClick={() => blockURL && window.open(blockURL, '_blank')} // Open the URL in a new tab when the block is clicked
     >
       <div>{editedText}</div>
-      {blockURL && <div className="block-url">{blockURL}</div>}
       {onMoveBlock && <span className="move-icon"></span>}
       {showPopup && (
         <BlockPopupModal
