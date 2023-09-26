@@ -374,7 +374,8 @@ function App() {
           onReset={handleReset}
           onUndo={handleUndo}
           onRedo={handleRedo}
-          onSaveDiagram={handleSaveDiagram} 
+          //onSaveDiagram={handleSaveDiagram} 
+          onSaveDiagram={saveBlocksToJson}
           onLoadDiagram={handleLoadDiagram} 
         />
         <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
