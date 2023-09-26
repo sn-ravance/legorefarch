@@ -1,56 +1,13 @@
 import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
-
-const ContextMenu = ({ top, left, onClose, onColorChange, onDelete }) => {
-  return (
-    <div className="context-menu" style={{ top: `${top}px`, left: `${left}px` }}>
-      <div
-        className="color-option"
-        onClick={() => onColorChange('lightgrey')}
-        style={{ backgroundColor: 'lightgrey' }}
-      >
-        Light Grey
-      </div>
-      <div
-        className="color-option"
-        onClick={() => onColorChange('lightgreen')}
-        style={{ backgroundColor: 'lightgreen' }}
-      >
-        Light Green
-      </div>
-      <div
-        className="color-option"
-        onClick={() => onColorChange('lightyellow')}
-        style={{ backgroundColor: 'lightyellow' }}
-      >
-        Light Yellow
-      </div>
-      <div
-        className="color-option"
-        onClick={() => onColorChange('#FFCCCB')}
-        style={{ backgroundColor: '#FFCCCB' }}
-      >
-        Light Red
-      </div>
-      <div
-        className="color-option"
-        onClick={() => onColorChange('lightblue')}
-        style={{ backgroundColor: 'lightblue' }}
-      >
-        Light Blue
-      </div>
-      <div className="color-option delete-option" onClick={onDelete}>
-        Delete
-      </div>
-    </div>
-  );
-};
+import BlockPopupModal from './BlockPopupModal';
 
 const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, setBlocks }) => {
-  const [blockColors, setBlockColors] = useState({}); // State to manage block colors
-  const [editedText, setEditedText] = useState(text); // State to manage the edited text
-  const [isEditing, setIsEditing] = useState(false); // State to track if the block is being edited
-  const [contextMenuPosition, setContextMenuPosition] = useState(null);
+  const [blockColors, setBlockColors] = useState({});
+  const [editedText, setEditedText] = useState(text);
+  const [blockURL, setBlockURL] = useState(''); // State to manage block URL
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupPosition, setPopupPosition] = useState(null);
 
   const blockColor = blockColors[id] || color;
 
@@ -67,37 +24,30 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
       ...prevBlockColors,
       [id]: newColor,
     }));
-    setContextMenuPosition(null);
-  };
-
-  const handleContextMenu = (e) => {
-    e.preventDefault();
-    setContextMenuPosition({ top: e.clientY, left: e.clientX });
+    setShowPopup(false);
   };
 
   const handleDelete = () => {
-    // Call the onDeleteBlock function to delete the block
     onDeleteBlock(id);
-    setContextMenuPosition(null);
+    setShowPopup(false);
     const newBlocks = blocks.filter((block) => block.id !== id);
     setBlocks(newBlocks);
   };
 
-  const handleDoubleClick = () => {
-    setIsEditing(true);
+  const handleNameChange = (newName) => {
+    setEditedText(newName);
+    setShowPopup(false);
   };
 
-  const handleTextChange = (e) => {
-    setEditedText(e.target.value);
+  const handleAssignURL = (newURL) => {
+    setBlockURL(newURL);
+    setShowPopup(false);
   };
 
-  const handleTextBlur = () => {
-    setIsEditing(false);
-    if (editedText.trim() !== '') {
-      setEditedText(editedText);
-    } else {
-      setEditedText(text || 'Edit Me!');
-    }
+  const handleRightClick = (e) => {
+    e.preventDefault();
+    setPopupPosition({ top: e.clientY, left: e.clientX });
+    setShowPopup(true);
   };
 
   return (
@@ -105,28 +55,23 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
       ref={drag}
       className={`block ${isDragging ? 'dragging' : ''}`}
       style={{ backgroundColor: blockColor }}
-      onContextMenu={handleContextMenu}
-      onDoubleClick={handleDoubleClick}
+      onContextMenu={handleRightClick}
+      onClick={() => blockURL && window.open(blockURL, '_blank')}
     >
-      {isEditing ? (
-        <input
-          type="text"
-          value={editedText}
-          onChange={handleTextChange}
-          onBlur={handleTextBlur}
-          autoFocus
-        />
-      ) : (
-        <div>{editedText}</div>
-      )}
+      <div>{editedText}</div>
+      {blockURL && <div className="block-url">{blockURL}</div>}
       {onMoveBlock && <span className="move-icon"></span>}
-      {contextMenuPosition && (
-        <ContextMenu
-          top={contextMenuPosition.top}
-          left={contextMenuPosition.left}
-          onClose={() => setContextMenuPosition(null)}
+      {showPopup && (
+        <BlockPopupModal
+          top={popupPosition.top}
+          left={popupPosition.left}
+          onClose={() => setShowPopup(false)}
           onColorChange={handleColorChange}
-          onDelete={handleDelete} 
+          onDelete={handleDelete}
+          onNameChange={handleNameChange}
+          onAssignURL={handleAssignURL}
+          currentName={editedText}
+          currentURL={blockURL}
         />
       )}
     </div>

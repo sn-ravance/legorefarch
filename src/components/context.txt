@@ -1,0 +1,47 @@
+import React, { useState } from 'react';
+import { useDrag } from 'react-dnd';
+
+const ContextMenu = ({ top, left, onClose, onColorChange, onDelete }) => {
+  return (
+    <div className="context-menu" style={{ top: `${top}px`, left: `${left}px` }}>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightgrey')}
+        style={{ backgroundColor: 'lightgrey' }}
+      >
+        Light Grey
+      </div>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightgreen')}
+        style={{ backgroundColor: 'lightgreen' }}
+      >
+        Light Green
+      </div>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightyellow')}
+        style={{ backgroundColor: 'lightyellow' }}
+      >
+        Light Yellow
+      </div>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('#FFCCCB')}
+        style={{ backgroundColor: '#FFCCCB' }}
+      >
+        Light Red
+      </div>
+      <div
+        className="color-option"
+        onClick={() => onColorChange('lightblue')}
+        style={{ backgroundColor: 'lightblue' }}
+      >
+        Light Blue
+      </div>
+      <div className="color-option delete-option" onClick={onDelete}>
+        Delete
+      </div>
+    </div>
+  );
+};
