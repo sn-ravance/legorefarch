@@ -27,8 +27,7 @@ const BlockPopupModal = ({ top, left, onClose, onColorChange, onDelete, onNameCh
 
   return (
     <div ref={modalRef} className="block-popup-modal" style={{ top: `${top}px`, left: `${left}px` }}>
-
-      <button onClick={onClose}>Close</button>
+      <button onClick={() => onClose(false)}>Close</button>
       <div>
         <label>Set Color:</label>
         <input type="color" onChange={(e) => onColorChange(e.target.value)} />
