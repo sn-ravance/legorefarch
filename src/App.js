@@ -205,11 +205,13 @@ function App() {
   };
 
   const handleMoveBlock = (blockId, targetSwimlane) => {
-    const newBlocks = blocks.map((block) =>
-      block.id === blockId ? { ...block, swimlane: targetSwimlane } : block
-    );
-    setBlocks(newBlocks);
-    setUnsavedDiagram(newBlocks); // Update the unsavedDiagram state
+    const updatedBlocks = blocks.map(block => {
+      if (block.id === blockId) {
+        return { ...block, swimlane: targetSwimlane };
+      }
+      return block;
+    });
+    setBlocks(updatedBlocks);
     addToHistory(newBlocks);
   };
 
@@ -305,27 +307,21 @@ function App() {
   }, [unsavedDiagram]);
 
   const handleSaveDiagram = () => {
-    if (!unsavedDiagram) {
-      alert('No diagram to save.');
+    if (!blocks || blocks.length === 0) {
+      alert('No blocks to save.');
       return;
     }
   
-    const suggestedFilename = 'Lego_RefArch'; // Default filename
+    const suggestedFilename = 'Lego_RefArch.json'; // Default filename
     const userFilename = window.prompt('Enter a filename for the diagram:', suggestedFilename);
   
     if (!userFilename) {
       alert('Diagram save canceled.');
       return;
     }
-
   
-    // Ensure each block has a color property before saving
-    const blocksWithColors = unsavedDiagram.map(block => ({
-      ...block,
-      color: block.color || 'lightgreen'
-    }));
-  
-    const dataToSave = JSON.stringify(blocksWithColors);
+    // Prepare the data to save
+    const dataToSave = JSON.stringify(blocks, null, 2);
     const blob = new Blob([dataToSave], { type: 'application/json' });
   
     // Use the saveAs function to download the diagram with the user-provided filename
@@ -334,17 +330,15 @@ function App() {
     alert('Diagram saved successfully!');
   };
   
+  // Function to save blocks to JSON
   const saveBlocksToJson = () => {
-    const blockData = blocks.map(block => ({
-      id: block.id,
-      color: block.color,
-      text: block.text,
-      swimlane: block.swimlane,
-      // Add any other properties you want to save
-    }));
-    const json = JSON.stringify(blockData, null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-    saveAs(blob, "blocks.json");
+    const json = JSON.stringify(blocks);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'blocks.json';
+    a.click();
   };
 
   const handleLoadDiagram = async (event) => {

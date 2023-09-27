@@ -21,6 +21,8 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onU
           Save Diagram
         </button>
 
+        <button className="save-button" onClick={saveBlocksToJson}>Save to JSON</button>
+
         <LoadUnsaved className="load-button" onLoadDiagram={onLoadDiagram} />
 
         <button className="generate-button" onClick={onGenerateImage}>

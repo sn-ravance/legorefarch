@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 import BlockPopupModal from './BlockPopupModal';
 
-const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, setBlocks }) => {
+const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, setBlocks, handleDeleteBlock, handleMoveBlock }) => {
   const [blockColors, setBlockColors] = useState({});
   const [editedText, setEditedText] = useState(text);
   const [blockURL, setBlockURL] = useState(''); // State to manage block URL
@@ -17,6 +17,12 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        handleMoveBlock(item.id, dropResult.name);
+      }
+    },
   });
 
   const handleColorChange = (newColor) => {
