@@ -3,6 +3,7 @@ import { useDrag } from 'react-dnd';
 import BlockPopupModal from './BlockPopupModal';
 
 const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, setBlocks, handleDeleteBlock, handleMoveBlock }) => {
+
   const [blockColors, setBlockColors] = useState({});
   const [editedText, setEditedText] = useState(text);
   const [blockURL, setBlockURL] = useState(''); // State to manage block URL
@@ -30,6 +31,31 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
       ...prevBlockColors,
       [id]: newColor,
     }));
+    const updatedBlock = blocks.find(block => block.id === id);
+    if (updatedBlock) {
+      updatedBlock.color = newColor;
+      setBlocks(prevBlocks => prevBlocks.map(block => block.id === id ? updatedBlock : block));
+    }
+    setShowPopup(false);
+  };
+
+  const handleNameChange = (newName) => {
+    setEditedText(newName);
+    const updatedBlock = blocks.find(block => block.id === id);
+    if (updatedBlock) {
+      updatedBlock.text = newName;
+      setBlocks(prevBlocks => prevBlocks.map(block => block.id === id ? updatedBlock : block));
+    }
+    setShowPopup(false);
+  };
+
+  const handleAssignURL = (newURL) => {
+    setBlockURL(newURL);
+    const updatedBlock = blocks.find(block => block.id === id);
+    if (updatedBlock) {
+      updatedBlock.url = newURL;  // Assuming 'url' is the attribute name for URLs
+      setBlocks(prevBlocks => prevBlocks.map(block => block.id === id ? updatedBlock : block));
+    }
     setShowPopup(false);
   };
 
@@ -38,16 +64,6 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
     setShowPopup(false);
     const newBlocks = blocks.filter((block) => block.id !== id);
     setBlocks(newBlocks);
-  };
-
-  const handleNameChange = (newName) => {
-    setEditedText(newName);
-    setShowPopup(false);
-  };
-
-  const handleAssignURL = (newURL) => {
-    setBlockURL(newURL);
-    setShowPopup(false);
   };
 
   const handleRightClick = (e) => {
