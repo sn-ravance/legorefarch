@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 import BlockPopupModal from './BlockPopupModal';
 
-const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, setBlocks, handleDeleteBlock, handleMoveBlock }) => {
-
+const Block = ({ id, color, text, swimlane, url, onMoveBlock, onDeleteBlock, blocks, setBlocks, handleDeleteBlock, handleMoveBlock }) => {
   const [blockColors, setBlockColors] = useState({});
   const [editedText, setEditedText] = useState(text);
-  const [blockURL, setBlockURL] = useState(''); // State to manage block URL
+  const [blockURL, setBlockURL] = useState(url || '');
+
   const [showPopup, setShowPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState(null);
 
