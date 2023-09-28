@@ -211,8 +211,9 @@ function App() {
       }
       return block;
     });
+    const newBlocks = updatedBlocks;  // Define newBlocks here
     setBlocks(updatedBlocks);
-    addToHistory(newBlocks);
+    addToHistory(newBlocks);  // Use newBlocks
   };
 
   const token = '95ad969bda5915a66d06fd842e73b5dc5c276b55';
@@ -381,8 +382,8 @@ function App() {
           onReset={handleReset}
           onUndo={handleUndo}
           onRedo={handleRedo}
-          //onSaveDiagram={handleSaveDiagram} 
-          onSaveDiagram={saveBlocksToJson}
+          onSaveDiagram={handleSaveDiagram} 
+          saveBlocksToJson={saveBlocksToJson}
           onLoadDiagram={handleLoadDiagram} 
         />
         <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>

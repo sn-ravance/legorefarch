@@ -3,7 +3,7 @@ import './Sidebar.css';
 import LoadUnsaved from './LoadUnsaved';
 import AddBlockPopup from './AddBlockPopup';
 
-const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onUndo, onRedo, onSaveDiagram, onLoadDiagram }) => {
+const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onUndo, onRedo, onSaveDiagram, onLoadDiagram, saveBlocksToJson }) => {
   const handleSidebarClick = (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') {
       return;
