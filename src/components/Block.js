@@ -21,7 +21,11 @@ const Block = ({ id, color, text, swimlane, onMoveBlock, onDeleteBlock, blocks, 
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
-        handleMoveBlock(item.id, dropResult.name);
+        if (handleMoveBlock) {
+          handleMoveBlock(item.id, dropResult.name);
+        } else {
+          console.error("handleMoveBlock is undefined");
+        }
       }
     },
   });
