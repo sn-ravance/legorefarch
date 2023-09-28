@@ -118,8 +118,6 @@ function App() {
   }));
   const [unsavedDiagram, setUnsavedDiagram] = useState(initialUnsavedDiagram); // Store the unsaved diagram data
 
-
-
   useEffect(() => {
     if (isLocalStorageAvailable()) {
       const storedBlocks = localStorage.getItem('blocks');
@@ -342,7 +340,8 @@ function App() {
       if (loadedDiagram && Array.isArray(loadedDiagram)) {
         setBlocks(loadedDiagram.map(block => ({
           ...block,
-          color: block.color || 'lightgreen' // Default to lightgreen if no color is specified
+          color: block.color || 'lightgreen', // Default to lightgreen if no color is specified
+          url: block.url || '' // Set the URL if available
         })));
       } else {
         alert('Invalid JSON format.');
