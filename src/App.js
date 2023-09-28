@@ -10,6 +10,7 @@ import { blobToBase64 } from './components/utils'; // Import the blobToBase64 ut
 import Swimlane from './components/Swimlane';
 import GitHubInteractions from './components/GitHubInteractions';
 import Sidebar from './components/Sidebar';
+import Block from './components/Block';
 
 function LegendSwimlane({ legendBlocks }) {
   return (
@@ -151,13 +152,33 @@ function App() {
     setBlocks(newBlocks);
   };
   
+  // Function to handle color change
   const handleColorChange = (blockId, newColor) => {
-    const updatedBlocks = blocks.map(block => 
-      block.id === blockId ? { ...block, color: newColor } : block
-    );
-    setBlocks(updatedBlocks);
-    setUnsavedDiagram(updatedBlocks); // Update the unsavedDiagram state
-    console.log('handleColorChange', blockId, newColor, blocks);
+    const updatedBlock = blocks.find(block => block.id === blockId);
+    if (updatedBlock) {
+      updatedBlock.color = newColor;
+      updateBlock(updatedBlock);
+    }
+  };
+
+   // Function to save blocks to JSON
+   const saveBlocksToJson = () => {
+    const json = JSON.stringify(blocks);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'blocks.json';
+    a.click();
+  };
+
+  const handleSaveDiagram = () => {
+    const userFilename = window.prompt("Enter filename to save", "diagram.json");
+    if (userFilename) {
+      const dataToSave = JSON.stringify(blocks, null, 2);
+      const blob = new Blob([dataToSave], { type: 'application/json' });
+      saveAs(blob, userFilename);
+    }
   };
 
   const toggleSidebar = () => {
@@ -307,41 +328,6 @@ function App() {
     localStorage.setItem('unsavedDiagram', JSON.stringify(unsavedDiagram));
   }, [unsavedDiagram]);
 
-  const handleSaveDiagram = () => {
-    if (!blocks || blocks.length === 0) {
-      alert('No blocks to save.');
-      return;
-    }
-  
-    const suggestedFilename = 'Lego_RefArch.json'; // Default filename
-    const userFilename = window.prompt('Enter a filename for the diagram:', suggestedFilename);
-  
-    if (!userFilename) {
-      alert('Diagram save canceled.');
-      return;
-    }
-  
-    // Prepare the data to save
-    const dataToSave = JSON.stringify(blocks, null, 2);
-    const blob = new Blob([dataToSave], { type: 'application/json' });
-  
-    // Use the saveAs function to download the diagram with the user-provided filename
-    saveAs(blob, userFilename);
-  
-    alert('Diagram saved successfully!');
-  };
-  
-  // Function to save blocks to JSON
-  const saveBlocksToJson = () => {
-    const json = JSON.stringify(blocks);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'blocks.json';
-    a.click();
-  };
-
   const handleLoadDiagram = async (event) => {
     if (!event.target.files || !event.target.files[0]) {
       alert('No file selected.');
@@ -421,9 +407,21 @@ function App() {
               <LegendSwimlane legendBlocks={initialLegendBlocks} />
             </div>
           </div>
+          <div>
+      {/* Render blocks */}
+      {blocks.map(block => (
+        <Block
+          key={block.id}
+          {...block}
+          handleMoveBlock={handleMoveBlock}
+        />
+      ))}
+    </div>
         </main>
+      
       </DndProvider>
     </div>
+
     </React.Fragment>
   );
 }
