@@ -21,6 +21,7 @@ const BlockPopupModal = ({ top, left, onClose, onColorChange, onDelete, onNameCh
 
   const handleClose = (e) => {
     e.preventDefault();
+    e.stopPropagation(); // Stop event propagation
     onNameChange(localName);
     onAssignURL(localURL);
     onClose();
@@ -28,6 +29,7 @@ const BlockPopupModal = ({ top, left, onClose, onColorChange, onDelete, onNameCh
 
   const handleDelete = (e) => {
     e.preventDefault();
+    e.stopPropagation(); // Stop event propagation
     onDelete(); // Call the onDelete function passed as a prop
     onClose(); // Close the modal
   };
