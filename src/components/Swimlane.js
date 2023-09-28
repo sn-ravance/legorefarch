@@ -2,7 +2,7 @@ import React from 'react';
 import Lane from './Lane';
 import Block from './Block';
 
-const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks }) => {
+const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks, handleMoveBlock }) => {
   const actors = [
     'Access Control',
     'Data Protection',
@@ -42,6 +42,8 @@ const Swimlane = ({ blocks, onMoveBlock, onDeleteBlock, setBlocks }) => {
                     <Block
                       key={block.id}
                       id={block.id}
+                      {...block}
+                      handleMoveBlock={handleMoveBlock} // Pass handleMoveBlock here
                       color={block.color}
                       text={block.text}
                       onMoveBlock={onMoveBlock}
