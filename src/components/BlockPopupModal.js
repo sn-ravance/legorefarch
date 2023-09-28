@@ -25,22 +25,28 @@ const BlockPopupModal = ({ top, left, onClose, onColorChange, onDelete, onNameCh
     onClose();
   };
 
+  const handleDelete = () => {
+    onDelete(); // Call the onDelete function passed as a prop
+    onClose(); // Close the modal
+  };
+
   return (
     <div ref={modalRef} className="block-popup-modal" style={{ top: `${top}px`, left: `${left}px` }}>
-      <button onClick={() => onClose(false)}>Close</button>
       <div>
-        <label>Set Color:</label>
+        <label>Status:</label>
         <input type="color" onChange={(e) => onColorChange(e.target.value)} />
       </div>
       <div>
-        <label>Change Name:</label>
+        <label>Name:</label>
         <input type="text" value={localName} onChange={handleLocalNameChange} />
       </div>
       <div>
-        <label>Assign URL:</label>
+        <label>URL:</label>
         <input type="text" value={localURL} onChange={handleLocalURLChange} />
       </div>
-      <button onClick={handleClose}>Close and Save</button>
+      <button onClick={handleClose}>Close</button> {/* Add this line */} | {/* Add this line */}
+      <button onClick={handleDelete}>Delete</button> {/* Add this line */} | {/* Add this line */}
+      <button onClick={handleClose}>Save</button>
     </div>
   );
 };
