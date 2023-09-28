@@ -19,13 +19,15 @@ const BlockPopupModal = ({ top, left, onClose, onColorChange, onDelete, onNameCh
     setLocalURL(e.target.value);
   };
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    e.preventDefault();
     onNameChange(localName);
     onAssignURL(localURL);
     onClose();
   };
 
-  const handleDelete = () => {
+  const handleDelete = (e) => {
+    e.preventDefault();
     onDelete(); // Call the onDelete function passed as a prop
     onClose(); // Close the modal
   };
@@ -44,9 +46,9 @@ const BlockPopupModal = ({ top, left, onClose, onColorChange, onDelete, onNameCh
         <label>URL:</label>
         <input type="text" value={localURL} onChange={handleLocalURLChange} />
       </div>
-      <button onClick={handleClose}>Close</button> {/* Add this line */} | {/* Add this line */}
-      <button onClick={handleDelete}>Delete</button> {/* Add this line */} | {/* Add this line */}
-      <button onClick={handleClose}>Save</button>
+      <button onClick={(e) => handleClose(e)}>Close</button>
+      <button onClick={(e) => handleDelete(e)}>Delete</button>
+      <button onClick={(e) => handleClose(e)}>Save</button>
     </div>
   );
 };

@@ -16,27 +16,25 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onU
       <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
         
         <AddBlockPopup className="add-button" onAddBlock={onAddBlock} />
-        
+        {/* Add this line */} 
         <button className="save-button" onClick={onSaveDiagram}>
           Save Diagram
         </button>
-
-        <button className="save-button" onClick={saveBlocksToJson}>Save to JSON</button>
-
+        {/* Add this line */}
         <LoadUnsaved className="load-button" onLoadDiagram={onLoadDiagram} />
-
+        {/* Add this line */}
         <button className="generate-button" onClick={onGenerateImage}>
           Generate PNG
         </button>
-
+        {/* Add this line */}
         <button className="undo-button" onClick={onUndo}>
           Undo
         </button>
-
+        {/* Add this line */}
         <button className="redo-button" onClick={onRedo}>
           Redo
         </button>
-
+        {/* Add this line */}
         <button className="reset-button" onClick={onReset}>
           Reset All
         </button>
