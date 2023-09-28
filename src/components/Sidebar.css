@@ -19,12 +19,78 @@
   left: 0;
 }
 
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100px;
+  padding: 8px 0;
+}
+
+.sidebar-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 300px;
+  padding: 10px 0;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 250px;
+  padding: 100px 0;
+}
+
+.sidebar-header {
+  border-bottom: 1px solid #555; /* Optional: Add a border to separate the header */
+}
+
+.sidebar-footer {
+  border-top: 1px solid #555; /* Optional: Add a border to separate the footer */
+  margin-top: auto; /* Push the footer to the bottom */
+}
+
+.title-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  width: 100%;
+  cursor: default;
+}
+
 .add-button,
-.save-button,
 .load-button,
 .generate-button,
+.redo-button {
+  background-color: #3498db;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  width: 60%;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin-bottom: 20px;
+}
+
+.save-button,
 .undo-button,
-.redo-button,
 .reset-button {
   background-color: #3498db;
   border: none;
@@ -37,6 +103,7 @@
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s;
+  margin-bottom: 10px;
 }
 
 .add-button:hover,

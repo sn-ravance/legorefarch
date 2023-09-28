@@ -14,30 +14,35 @@ const Sidebar = ({ expanded, onToggle, onGenerateImage, onReset, onAddBlock, onU
   return (
     <React.Fragment>
       <div className={`sidebar ${expanded ? 'expanded' : ''}`} onClick={handleSidebarClick}>
-        
-        <AddBlockPopup className="add-button" onAddBlock={onAddBlock} />
-        {/* Add this line */} 
-        <button className="save-button" onClick={onSaveDiagram}>
-          Save Diagram
-        </button>
-        {/* Add this line */}
-        <LoadUnsaved className="load-button" onLoadDiagram={onLoadDiagram} />
-        {/* Add this line */}
-        <button className="generate-button" onClick={onGenerateImage}>
-          Generate PNG
-        </button>
-        {/* Add this line */}
-        <button className="undo-button" onClick={onUndo}>
-          Undo
-        </button>
-        {/* Add this line */}
-        <button className="redo-button" onClick={onRedo}>
-          Redo
-        </button>
-        {/* Add this line */}
-        <button className="reset-button" onClick={onReset}>
-          Reset All
-        </button>
+        <div className="sidebar-header">
+          <button className="title-button">
+            RefArch Diagram Generator
+          </button>
+        </div>
+        <div className="sidebar-body">
+          <AddBlockPopup className="add-button" onAddBlock={onAddBlock} />
+
+          <button className="save-button" onClick={onSaveDiagram}>
+            Save Diagram
+          </button>
+
+          <LoadUnsaved className="load-button" onLoadDiagram={onLoadDiagram} />
+
+          <button className="generate-button" onClick={onGenerateImage}>
+            Generate PNG
+          </button>
+
+          <button className="undo-button" onClick={onUndo}>
+            Undo
+          </button>
+          <button className="redo-button" onClick={onRedo}>
+            Redo
+          </button>
+        </div>
+        <div className="sidebar-footer">
+          <button className="reset-button" onClick={onReset}>Reset All</button>
+        </div>i
+       
       </div>
 
     </React.Fragment>

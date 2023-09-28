@@ -34,11 +34,21 @@ const BlockPopupModal = ({ top, left, onClose, onColorChange, onDelete, onNameCh
     onClose(); // Close the modal
   };
 
+  const handleColorBoxClick = (color) => {
+    onColorChange(color);
+  };
+
   return (
     <div ref={modalRef} className="block-popup-modal" style={{ top: `${top}px`, left: `${left}px` }}>
       <div>
         <label>Status:</label>
-        <input type="color" onChange={(e) => onColorChange(e.target.value)} />
+        <div className="color-boxes">
+          <div className="color-box" style={{ backgroundColor: 'lightgrey' }} onClick={() => handleColorBoxClick('lightgrey')}></div>
+          <div className="color-box" style={{ backgroundColor: 'lightgreen' }} onClick={() => handleColorBoxClick('lightgreen')}></div>
+          <div className="color-box" style={{ backgroundColor: 'lightyellow' }} onClick={() => handleColorBoxClick('lightyellow')}></div>
+          <div className="color-box" style={{ backgroundColor: '#FFCCCB' }} onClick={() => handleColorBoxClick('#FFCCCB')}></div>
+          <div className="color-box" style={{ backgroundColor: 'lightblue' }} onClick={() => handleColorBoxClick('lightblue')}></div>
+        </div>
       </div>
       <div>
         <label>Name:</label>
