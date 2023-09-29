@@ -32,6 +32,35 @@ body, h1, h2, h3, p, ul, li {
   opacity: 1;
 }
 
+.top-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100px;
+  padding: 8px 0;
+}
+
+.middle-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.bottom-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 250px;
+  padding: 100px 0;
+}
+
 .middle-section {
   display: flex;
   flex-direction: column;

@@ -412,7 +412,9 @@ function App() {
             </div>
             <div className="bottom-section">
               {/* Bottom section content */}
-              Footer
+              <h1 className="app-title">
+                RefArch Diagram Generator
+              </h1>
             </div>
           </main>
         </DndProvider>
