@@ -10,7 +10,6 @@ import { blobToBase64 } from './components/utils'; // Import the blobToBase64 ut
 import Swimlane from './components/Swimlane';
 import GitHubInteractions from './components/GitHubInteractions';
 import Sidebar from './components/Sidebar';
-import Block from './components/Block';
 
 function LegendSwimlane({ legendBlocks }) {
   return (
@@ -355,7 +354,6 @@ function App() {
   return (
     <React.Fragment>
       <div className="App">
-
         <DndProvider backend={HTML5Backend}>
           <Sidebar
             expanded={sidebarExpanded}
@@ -378,7 +376,7 @@ function App() {
             </div>
             <div className="section middle-section">
                 {/* Middle section content */}
-              <Routes>
+                <Routes>
                 {/* Use the element prop to render components */}
                 <Route path="/" element={<Swimlane
                     blocks={blocks}
@@ -410,16 +408,6 @@ function App() {
                   />
                   <LegendSwimlane legendBlocks={initialLegendBlocks} />
                 </div>
-              </div>
-              <div>
-                {/* Render blocks */}
-                {blocks.map(block => (
-                  <Block
-                    key={block.id}
-                    {...block}
-                    handleMoveBlock={handleMoveBlock}
-                  />
-                ))}
               </div>
             </div>
             <div className="section bottom-section">
