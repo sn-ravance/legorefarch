@@ -354,73 +354,81 @@ function App() {
 
   return (
     <React.Fragment>
-    <div className="App">
-      <h1 className="app-title">
-        RefArch Diagram Generator
-      </h1>
-      <DndProvider backend={HTML5Backend}>
-        <Sidebar
-          expanded={sidebarExpanded}
-          onToggle={toggleSidebar}
-          onAddBlock={handleAddBlock}
-          onGenerateImage={handleGenerateAndUploadImage}
-          onReset={handleReset}
-          onUndo={handleUndo}
-          onRedo={handleRedo}
-          onSaveDiagram={handleSaveDiagram} 
-          saveBlocksToJson={saveBlocksToJson}
-          onLoadDiagram={handleLoadDiagram} 
-        />
-        <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
-        <Routes>
-            {/* Use the element prop to render components */}
-            <Route path="/" element={<Swimlane
-                blocks={blocks}
-                onMoveBlock={handleMoveBlock}
-                onGenerateImage={handleGenerateAndUploadImage}
-                onReset={handleReset}
-                onDeleteBlock={handleDeleteBlock}
-                onUndo={handleUndo} // Pass the undo function
-                onRedo={handleRedo} // Pass the redo function
-                onColorChange={handleColorChange} // Pass the color change function
-                setBlocks={setBlocks}
-              />} />
-            <Route path="/github" element={<GitHubInteractions />} />
-          </Routes>
-          <div className="center-container">
-            <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
-              <Swimlane
-                blocks={blocks}
-                updateBlock={updateBlock} 
-                deleteBlock={deleteBlock}
-                onMoveBlock={handleMoveBlock}
-                onGenerateImage={handleGenerateAndUploadImage}
-                onReset={handleReset}
-                onDeleteBlock={handleDeleteBlock}
-                onUndo={handleUndo} // Pass the undo function
-                onRedo={handleRedo} // Pass the redo function
-                onColorChange={handleColorChange}
-                setBlocks={setBlocks}
-              />
+      <div className="App">
 
-              <LegendSwimlane legendBlocks={initialLegendBlocks} />
+        <DndProvider backend={HTML5Backend}>
+          <Sidebar
+            expanded={sidebarExpanded}
+            onToggle={toggleSidebar}
+            onAddBlock={handleAddBlock}
+            onGenerateImage={handleGenerateAndUploadImage}
+            onReset={handleReset}
+            onUndo={handleUndo}
+            onRedo={handleRedo}
+            onSaveDiagram={handleSaveDiagram} 
+            saveBlocksToJson={saveBlocksToJson}
+            onLoadDiagram={handleLoadDiagram} 
+          />
+          <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
+            <div className="section top-section">
+              {/* Top section content */}
+              <h1 className="app-title">
+                RefArch Diagram Generator
+              </h1>
             </div>
-          </div>
-          <div>
-      {/* Render blocks */}
-      {blocks.map(block => (
-        <Block
-          key={block.id}
-          {...block}
-          handleMoveBlock={handleMoveBlock}
-        />
-      ))}
-    </div>
-        </main>
-      
-      </DndProvider>
-    </div>
-
+            <div className="section middle-section">
+                {/* Middle section content */}
+              <Routes>
+                {/* Use the element prop to render components */}
+                <Route path="/" element={<Swimlane
+                    blocks={blocks}
+                    onMoveBlock={handleMoveBlock}
+                    onGenerateImage={handleGenerateAndUploadImage}
+                    onReset={handleReset}
+                    onDeleteBlock={handleDeleteBlock}
+                    onUndo={handleUndo} // Pass the undo function
+                    onRedo={handleRedo} // Pass the redo function
+                    onColorChange={handleColorChange} // Pass the color change function
+                    setBlocks={setBlocks}
+                  />} />
+                <Route path="/github" element={<GitHubInteractions />} />
+              </Routes>
+              <div className="center-container">
+                <div className={`grid-container ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
+                  <Swimlane
+                    blocks={blocks}
+                    updateBlock={updateBlock} 
+                    deleteBlock={deleteBlock}
+                    onMoveBlock={handleMoveBlock}
+                    onGenerateImage={handleGenerateAndUploadImage}
+                    onReset={handleReset}
+                    onDeleteBlock={handleDeleteBlock}
+                    onUndo={handleUndo} // Pass the undo function
+                    onRedo={handleRedo} // Pass the redo function
+                    onColorChange={handleColorChange}
+                    setBlocks={setBlocks}
+                  />
+                  <LegendSwimlane legendBlocks={initialLegendBlocks} />
+                </div>
+              </div>
+              <div>
+                {/* Render blocks */}
+                {blocks.map(block => (
+                  <Block
+                    key={block.id}
+                    {...block}
+                    handleMoveBlock={handleMoveBlock}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="section bottom-section">
+              {/* Bottom section content */}
+              Footer
+            </div>
+          </main>
+        </DndProvider>
+      </div>          
     </React.Fragment>
   );
 }
