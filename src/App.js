@@ -368,15 +368,15 @@ function App() {
             onLoadDiagram={handleLoadDiagram} 
           />
           <main className={`content ${sidebarExpanded ? 'content-expanded' : ''}`}>
-            <div className="section top-section">
+            <div className="top-section">
               {/* Top section content */}
               <h1 className="app-title">
                 RefArch Diagram Generator
               </h1>
             </div>
-            <div className="section middle-section">
+            <div className="middle-section">
                 {/* Middle section content */}
-                <Routes>
+              <Routes>
                 {/* Use the element prop to render components */}
                 <Route path="/" element={<Swimlane
                     blocks={blocks}
@@ -410,7 +410,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="section bottom-section">
+            <div className="bottom-section">
               {/* Bottom section content */}
               Footer
             </div>
