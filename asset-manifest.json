@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/legorefarch/static/css/main.6c99efc2.css",
-    "main.js": "/legorefarch/static/js/main.5506aefe.js",
+    "main.css": "/legorefarch/static/css/main.4020316a.css",
+    "main.js": "/legorefarch/static/js/main.8f608e4b.js",
     "index.html": "/legorefarch/index.html",
-    "main.6c99efc2.css.map": "/legorefarch/static/css/main.6c99efc2.css.map",
-    "main.5506aefe.js.map": "/legorefarch/static/js/main.5506aefe.js.map"
+    "main.4020316a.css.map": "/legorefarch/static/css/main.4020316a.css.map",
+    "main.8f608e4b.js.map": "/legorefarch/static/js/main.8f608e4b.js.map"
   },
   "entrypoints": [
-    "static/css/main.6c99efc2.css",
-    "static/js/main.5506aefe.js"
+    "static/css/main.4020316a.css",
+    "static/js/main.8f608e4b.js"
   ]
 }
