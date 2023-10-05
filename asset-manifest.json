@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/legorefarch/static/css/main.6c99efc2.css",
+    "main.js": "/legorefarch/static/js/main.5506aefe.js",
+    "index.html": "/legorefarch/index.html",
+    "main.6c99efc2.css.map": "/legorefarch/static/css/main.6c99efc2.css.map",
+    "main.5506aefe.js.map": "/legorefarch/static/js/main.5506aefe.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6c99efc2.css",
+    "static/js/main.5506aefe.js"
+  ]
+}
