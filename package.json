@@ -1,7 +1,7 @@
 {
   "name": "legorefarch",
   "version": "0.1.0",
-  "homepage": "https://sealmindset.github.io/legorefarch",
+  "homepage": "https://sn-ravance.github.io/legorefarch",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
