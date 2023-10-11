@@ -28,3 +28,5 @@ yarn-error.log*
 
 src/components/codethatworks
 package-lock.json
+
+temp
