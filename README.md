@@ -11,8 +11,20 @@ A React application that allows you to generate and visualize a security focused
 - Reset the diagram to its initial state or clear specific swimlanes.
 - Redo or unchages that were made.
 
+## How to run
+Download the code locally.
+
+```
+git clone https://github.com/sealmindset/legorefarch.git
+
+cd legorefarch
+
+npm install
+
+npm start
+```
+
 ## Known issues
-- Colors: The Undo/Redo can't handle the colors of each Block.
 
 ## The Goal
 To create an interactive tool powered by AI to create the referance architecture documentation.
